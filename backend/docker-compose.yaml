@@ -13,3 +13,9 @@ services:
       - ./app:/app
     environment:
       - FLASK_ENV=development
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: super_secret_dont_share
+      POSTGRES_DB: leasemagnets
