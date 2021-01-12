@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Script to run backend server and frontend server
+#
+# Run "./bin/backend" in terminal to use
+
+# Stop on errors
+# See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -Eeuo pipefail
+
+# Start backend server
+cd backend/app
+source venv/bin/activate
+docker-compose up --build

@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# Script to test code styling
+#
+# Run "./bin/test" in terminal to use
+
+# Stop on errors
+# See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -Eeuo pipefail
+
+# Enter backend app directory and start virtual environment
+cd backend/app
+source venv/bin/activate
+
+# Run python style guides
+pylint **.py
+
+# Close virtual environment
+deactivate
