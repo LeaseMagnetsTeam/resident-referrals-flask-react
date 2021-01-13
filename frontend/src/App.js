@@ -1,6 +1,4 @@
-import React, {useState} from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
 import 'tabler-react/dist/Tabler.css';
 import { Loader } from 'tabler-react';
 import { BrowserRouter as Router } from 'react-router-dom';
