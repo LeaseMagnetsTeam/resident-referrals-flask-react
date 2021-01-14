@@ -1,0 +1,35 @@
+.answer-choice {
+  width: 90%;
+  margin: 5px 5% 5px 5%;
+  border: none;
+  border-radius: 25px;
+  height: 44px;
+  text-align: left;
+  font-weight: bold;
+  /* -webkit-transition-duration: 1s; */ /* Safari */
+  /* transition-duration: 1s;
+  cursor: pointer; */
+}
+
+.question-banner {
+  height: 28vh;
+  opacity: 0.7;
+  display: flex;
+  align-items: flex-end;
+}
+
+.question-banner-text {
+  color: white;
+  font-size: 20px;
+  margin: 0% 5% 5% 5%;
+}
+
+.question-banner-text h2 {
+  font-size: 34px;
+}
+
+.question-text {
+  color: black;
+  margin: 20px 5% 20px 5%;
+  font-weight: 400;
+}
