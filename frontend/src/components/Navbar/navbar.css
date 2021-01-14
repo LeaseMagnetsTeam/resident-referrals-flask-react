@@ -1,0 +1,11 @@
+.navbar {
+  background-color: black;
+  font-size: 24px;
+  width: 100vw;
+  height: 80px;
+}
+
+.navbar .white {
+  font-weight: 600;
+  letter-spacing: -2px;
+}
