@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:regular,bold,italic&subset=latin,latin-ext');
+/* @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:regular,bold,italic&subset=latin,latin-ext');
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
@@ -7,7 +7,7 @@
     height: 100vh;
     overflow: auto;
   }
-  
+
   .right {
     background-color: #ffffff;
     height: 100vh;
@@ -18,13 +18,13 @@
     background-size: cover;
     position: relative;
   }
-  
+
   .ctr {
     height: 100vh;
     margin-left: 0;
     margin-right:0;
   }
-  
+
   .login{
     max-width: 90%;
   }
@@ -36,10 +36,10 @@
     font-weight: 700;
   }
 
-  
+
   .featuredContent {
-    position: absolute;  
-    
+    position: absolute;
+
     bottom: 50px;
     left: 50px;
     color: white;
@@ -53,7 +53,7 @@
 
   }
 
-  
+
   .featuredTrialHeader {
     font-family: 'Poppins', sans-serif;
     font-style: normal;
@@ -71,7 +71,7 @@
   }
 
   .featuredWebsiteLink:hover {
-    opacity: 1.0;    
+    opacity: 1.0;
   }
 
   .featuredPerson {
@@ -108,4 +108,4 @@
       overflow: visible;
       height: auto;
     }
-  }
+  } */
