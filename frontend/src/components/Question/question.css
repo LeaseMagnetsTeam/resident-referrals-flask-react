@@ -63,3 +63,11 @@
   font-weight: 600;
   text-decoration: none;
 }
+
+.exit-text {
+  margin: 12% 5% 0% 5%;
+  color: black;
+  font-size: 24px;
+  line-height: 42px;
+  text-align: center;
+}
