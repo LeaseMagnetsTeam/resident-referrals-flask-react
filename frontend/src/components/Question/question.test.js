@@ -5,6 +5,7 @@ const apt_template = {
   image: 'https://photos.zillowstatic.com/fp/f675a3f5ab964e2441d24672fd1cc615-p_e.jpg'
 };
 
+// Landing page '/'
 const question_template = {
   id: 12345,
   question: 'How did you end up here?',
@@ -15,20 +16,84 @@ const question_template = {
     },
     {
       text: 'Finished signing a lease',
-      nextURL: '/signed-lease'
+      nextURL: '/toured-community'
     },
     {
-      text: 'My maintence request was just completed',
-      nextURL: '/maintence-request'
+      text: 'My maintenance request was completed',
+      nextURL: '/toured-community'
     },
     {
       text: 'Other',
-      nextURL: '/other'
+      nextURL: '/toured-community'
+    }
+  ]
+};
+
+// 2nd question if 'toured the community' is selected
+const question_template3 = {
+  id: 87654,
+  question: 'Who did you tour with?',
+  answers: [
+    {
+      text: 'Amulya Parmar',
+      nextURL: '/ask-review'
+    },
+    {
+      text: 'Amulya Parmar',
+      nextURL: '/ask-review'
+    },
+    {
+      text: 'Amulya Parmar',
+      nextURL: '/ask-review'
+    },
+    {
+      text: 'Amulya Parmar',
+      nextURL: '/ask-review'
+    },
+    {
+      text: 'Amulya Parmar',
+      nextURL: '/ask-review'
+    }
+  ]
+};
+
+// 3rd question if 'Amulya Parmar' is selected
+const question_template1 = {
+  id: 65432,
+  question: 'Would you be willing to leave us a review of your experience with Amulya Parmar?',
+  answers: [
+    {
+      text: 'Yes!',
+      nextURL: '/review'
+    },
+    {
+      text: 'No thank you',
+      nextURL: '/ask-google-review'
+    }
+  ]
+};
+
+
+// 4th question if 'No thank you' is selected
+const question_template2 = {
+  id: 98765,
+  question: 'Would you be willing to leave us a review of your experience with The George?',
+  answers: [
+    {
+      text: 'Yes!',
+      nextURL: 'http://search.google.com/local/writereview?placeid=ChIJx41ywWL6MIgRT5xaRhoEI9g'
+    },
+    {
+      text: 'No thank you',
+      nextURL: '/exit-page'
     }
   ]
 };
 
 export {
   apt_template,
-  question_template
+  question_template,
+  question_template1,
+  question_template2,
+  question_template3
 };

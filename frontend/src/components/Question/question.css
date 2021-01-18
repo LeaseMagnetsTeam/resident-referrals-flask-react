@@ -1,11 +1,13 @@
 .answer-choice {
+  display: flex;
+  align-items: center;
   width: 90%;
-  margin: 5px 5% 5px 5%;
+  margin: 5px 5% 10px 5%;
   border: none;
   border-radius: 25px;
   height: 44px;
   text-align: left;
-  font-weight: bold;
+  font-weight: 600;
   /* -webkit-transition-duration: 1s; */ /* Safari */
   /* transition-duration: 1s;
   cursor: pointer; */
@@ -21,7 +23,7 @@
 .question-banner-text {
   color: white;
   font-size: 20px;
-  margin: 0% 5% 5% 5%;
+  margin: 0% 5% 0% 5%;
 }
 
 .question-banner-text h2 {
@@ -31,5 +33,33 @@
 .question-text {
   color: black;
   margin: 20px 5% 20px 5%;
+  font-size: 26px;
   font-weight: 400;
+}
+
+.letter-container {
+  width: 30px;
+  height: 30px;
+  border-style: none;
+  border-color: #df4343;
+  border-radius: 50px;
+  background-color: #ED6E48;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.letter {
+  /* color: white;
+  display: block;
+  background-color: #ED6E48;
+  border-radius: 50px;
+  height: 30px;
+  width: 30px;
+  text-align: center; */
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
 }
