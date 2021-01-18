@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, redirect, render_template
 from flask_cors import CORS
-from models import db, Lead, ConstantsModel
+from models import db, Lead, User, Apartment, ConstantsModel, initialize_db
 from util import request_data
 import os
 import json
@@ -10,8 +10,10 @@ import plivo
 app = Flask(__name__)
 conf = os.environ.get("APP_SETTINGS", "config.StagingConfig")
 app.config.from_object(conf)
-db.init_app(app)
+initialize_db(app, tearDown=False)
 CORS(app, supports_credentials=True)
+
+
 
 with open("secrets.json") as f:
     secrets = json.load(f)
@@ -258,6 +260,62 @@ def send_sms():
     phlo = phlo_client.phlo.get(phlo_id)
     response = phlo.run(**payload)
 
+# ------------------ Remove before commiting
+@app.route("/user", methods=["GET", "POST", "PUT", "DELETE"])
+def user():
+    if request.method == "POST":
+        # TODO: Check params
+        j_res = request.get_json()
+
+        user = User(name=j_res["name"], phoneNumber=j_res["phoneNumber"], email=j_res["email"], role=j_res["role"], apartment=j_res["apartment"])
+        
+        print(user)
+        db.session.add(user)
+        db.session.commit()
+
+        return jsonify(user=sqldict(user))
+
+    elif request.method == "DELETE":
+        id = request.args.get("id", default=None, type=int)
+        
+        user = User.query.get(id)
+        db.session.delete(user)
+        db.session.commit()
+
+        return "2000"
+
+"""
+    Lists all users in database
+"""
+@app.route("/users", methods=["GET"])
+def users():
+    users = []
+
+    # Lmao walrus operator
+    if apartment := request.args.get("apartment", default=None, type=int):
+        for user in User.query.filter_by(apartment=apartment):
+            users.append(sqldict(user))
+    else:
+        for user in User.query.all():
+            users.append(sqldict(user))
+
+    print(users, flush=True)
+    return jsonify(users=users)
+
+@app.route("/apartment", methods=["GET", "POST", "PUT", "DELETE"])
+def apartment():
+    pass
+
+"""
+    Lists all apartments in database
+"""
+@app.route("/apartments", methods=["GET"])
+def apartments():
+    apartments = []
+    for apartment in Apartment.query.all():
+        apartments.append(sqldict(apartment))
+    print(apartments, flush=True)
+    return jsonify(apartments=apartments)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
