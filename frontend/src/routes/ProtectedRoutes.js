@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 
 // import { SignUp, SignIn, ResetPassword } from '../components/Auth';
 import { Navbar } from "../components/Navbar"
-import { Question, Exit, SpecialOffer } from '../components/Question';
+import { Question, Exit, SpecialOffer, Review } from '../components/Question';
 
 // Testing backend without backend server
 import {
@@ -27,6 +27,9 @@ const ProtectedRoutes = () => {
         </Route>
         <Route path="/ask-review" exact>
           <Question apt_template={apt_template} question_template={question_template1} />
+        </Route>
+        <Route path="/give-review" exact>
+          <Review apt_template={apt_template} />
         </Route>
         <Route path="/ask-google-review" exact>
           <Question apt_template={apt_template} question_template={question_template2} />

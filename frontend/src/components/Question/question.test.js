@@ -64,7 +64,7 @@ const question_template1 = {
   answers: [
     {
       text: 'Yes!',
-      nextURL: '/review'
+      nextURL: '/give-review'
     },
     {
       text: 'No thank you',
