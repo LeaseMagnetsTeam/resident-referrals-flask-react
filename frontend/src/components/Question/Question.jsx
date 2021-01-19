@@ -23,7 +23,7 @@ function Answer({ idx, text, nextURL }) {
   return (
     <a href={nextURL}>
       <button className='answer-choice'>
-        <div className='letter-container'>
+        <div className='center-div letter-container'>
           <div className='letter'>
             {String.fromCharCode(idx + 65)}
           </div>

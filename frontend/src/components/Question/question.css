@@ -44,20 +44,10 @@
   border-color: #df4343;
   border-radius: 50px;
   background-color: #ED6E48;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   margin-right: 8px;
 }
 
 .letter {
-  /* color: white;
-  display: block;
-  background-color: #ED6E48;
-  border-radius: 50px;
-  height: 30px;
-  width: 30px;
-  text-align: center; */
   color: #fff;
   font-size: 18px;
   font-weight: 600;
@@ -70,4 +60,42 @@
   font-size: 24px;
   line-height: 42px;
   text-align: center;
+}
+
+.offer-form form {
+  margin: 10px 0 10px 0;
+}
+
+.offer-form input[type='text'], .offer-form input[type='email'] {
+  width: 70vw;
+  height: 40px;
+  border-radius: 25px;
+  border: 2px solid #ED6E48;
+  margin-bottom: 6px;
+}
+
+.offer-form input[type='submit'], .offer-form input[type='reset'] {
+  text-align: center;
+  margin: 4px 3px 6px 3px;
+  border: 2px solid #ED6E48;
+  border-radius: 50px;
+  font-size: 20px;
+  font-weight: bold;
+  height: 42px;
+}
+
+.offer-form input[type='submit']:hover, .offer-form input[type='reset']:hover {
+  opacity: 0.7;
+}
+
+.offer-form input[type='submit'] {
+  width: 44vw;
+  color: white;
+  background-color: #ED6E48;
+}
+
+.offer-form input[type='reset'] {
+  width: 24vw;
+  color: #ED6E48;
+  background-color: white;
 }

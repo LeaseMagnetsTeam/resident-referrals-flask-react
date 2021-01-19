@@ -73,7 +73,6 @@ const question_template1 = {
   ]
 };
 
-
 // 4th question if 'No thank you' is selected
 const question_template2 = {
   id: 98765,
