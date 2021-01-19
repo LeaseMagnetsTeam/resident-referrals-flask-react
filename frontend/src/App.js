@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import { Loader } from 'tabler-react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import ProtectedNavbar from './components/Navbar/ProtectedNavbar';
+// import ProtectedNavbar from './components/Navbar/ProtectedNavbar';
 
-import ResetPassword from './components/Auth/ResetPassword';
+// import ResetPassword from './components/Auth/ResetPassword';
 
 // Import Routes
 import AuthRoutes from './routes/AuthRoutes';
