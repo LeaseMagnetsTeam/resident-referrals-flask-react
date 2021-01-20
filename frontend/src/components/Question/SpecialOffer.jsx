@@ -22,7 +22,7 @@ export default function SpecialOffer({ apt_template }) {
           Yes, of course!
         </button>
         {(wantsOffer) && <OfferForm />}
-        <a href='#'>
+        <a href='/exit-page'>
           <button className='answer-choice'>
             <div className='center-div letter-container'>
               <div className='letter'>
@@ -62,6 +62,7 @@ function OfferForm() {
     }
     console.log(name, email, phone);
     console.log('TODO: handle form submit via backend post request');
+    window.open('/ask-google-review', '_self');
   }
 
   // Resets form values' states

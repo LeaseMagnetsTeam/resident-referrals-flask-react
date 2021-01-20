@@ -60,7 +60,7 @@ const question_template3 = {
 // 3rd question if 'Amulya Parmar' is selected
 const question_template1 = {
   id: 65432,
-  question: 'Would you be willing to leave us a review of your experience with Amulya Parmar?',
+  question: 'Would you be willing to leave us a review of your experience at The George with Amulya Parmar?',
   answers: [
     {
       text: 'Yes!',
@@ -68,7 +68,7 @@ const question_template1 = {
     },
     {
       text: 'No thank you',
-      nextURL: '/ask-google-review'
+      nextURL: '/special-offer'
     }
   ]
 };
@@ -76,7 +76,7 @@ const question_template1 = {
 // 4th question if 'No thank you' is selected
 const question_template2 = {
   id: 98765,
-  question: 'Would you be willing to leave us a review of your experience with The George?',
+  question: 'Would you be willing to leave us a review of The George?',
   answers: [
     {
       text: 'Yes!',
