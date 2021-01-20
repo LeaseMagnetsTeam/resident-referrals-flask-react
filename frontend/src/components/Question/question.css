@@ -115,7 +115,7 @@
   width: 90vw;
   height: 90px;
   border: 1px solid #ED6E48;
-  overflow-y: scroll; 
+  overflow-y: scroll;
 }
 
 .review-container button {
@@ -128,4 +128,8 @@
   background-color: #ED6E48;
   color: white;
   font-weight: bold;
+}
+
+.center-div .MuiRating-sizeLarge {
+  font-size: 4rem;
 }
