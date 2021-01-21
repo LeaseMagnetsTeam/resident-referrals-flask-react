@@ -6,7 +6,7 @@ import Rating from '@material-ui/lab/Rating';
 
 import './question.css';
 
-export default function RateReview({ apt_template }) {
+export default function RateReview({ setRoute, apt_template }) {
   // Track of user rates <= 3 or > 3
   const [isGood, setIsGood] = useState(true);
   const [staff] = useState('Amulya Parmar');
@@ -29,7 +29,7 @@ export default function RateReview({ apt_template }) {
     }
     // Else, prompt user with Google review
     else {
-      window.open(apt_template.review_link, '_self');
+      setRoute(apt_template.review_link);
     }
   }
 
@@ -37,7 +37,7 @@ export default function RateReview({ apt_template }) {
   function handleShareFeedback() {
     // TODO: backend save feedback into database
     // Open next route for user - /exit-page
-    window.open('/exit-page', '_self');
+    setRoute('/exit-page');
   }
 
   return (

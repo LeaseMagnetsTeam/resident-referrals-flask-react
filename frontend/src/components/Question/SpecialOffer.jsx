@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Banner from './Banner';
 import './question.css';
 
-export default function SpecialOffer({ apt_template }) {
+export default function SpecialOffer({ setRoute, apt_template }) {
   // Keep track of whether user clicks Yes or No
   const [wantsOffer, setWantsOffer] = useState(false);
 
@@ -21,24 +21,22 @@ export default function SpecialOffer({ apt_template }) {
           </div>
           Yes, of course!
         </button>
-        {(wantsOffer) && <OfferForm />}
-        <a href='/ask-review'>
-          <button className='answer-choice'>
-            <div className='center-div letter-container'>
-              <div className='letter'>
-                B
-              </div>
+        {(wantsOffer) && <OfferForm setRoute={setRoute} />}
+        <button className='answer-choice' onClick={() => setRoute('/ask-review')}>
+          <div className='center-div letter-container'>
+            <div className='letter'>
+              B
             </div>
-            No thank you, I don't want special offers.
-          </button>
-        </a>
+          </div>
+          No thank you, I don't want special offers.
+        </button>
       </div>
     </div>
   );
 }
 
 // Form for handling user data for opt-in SMS/email
-function OfferForm() {
+function OfferForm({ setRoute }) {
   // Keep track of form values
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -69,7 +67,7 @@ function OfferForm() {
     }
     console.log(name, email, phone);
     console.log('TODO: handle form submit via backend post request');
-    window.open('/ask-review', '_self');
+    setRoute('/ask-review');
   }
 
   // Resets form values' states

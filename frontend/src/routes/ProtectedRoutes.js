@@ -1,5 +1,5 @@
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import React, { useState } from 'react';
+// import { Switch, Route } from 'react-router-dom';
 
 // import { SignUp, SignIn, ResetPassword } from '../components/Auth';
 import { Navbar } from "../components/Navbar"
@@ -14,10 +14,31 @@ import {
 } from '../components/Question/question.test.js';
 
 const ProtectedRoutes = () => {
+  // Track which route user is on
+  const [route, setRoute] = useState('/');
+
   return (
     <>
       <Navbar />
-      <Switch>
+      {(route === '/') &&
+        <Question setRoute={setRoute} apt_template={apt_template} question_template={question_template} />
+      }
+      {(route === '/toured-community') &&
+        <Question setRoute={setRoute} apt_template={apt_template} question_template={question_template3} />
+      }
+      {(route === '/ask-review') &&
+        <Question setRoute={setRoute} apt_template={apt_template} question_template={question_template1} />
+      }
+      {(route === '/give-review') &&
+        <Review setRoute={setRoute} apt_template={apt_template} />
+      }
+      {(route === '/special-offer') &&
+        <SpecialOffer setRoute={setRoute} apt_template={apt_template} />
+      }
+      {(route === '/exit-page') &&
+        <Exit apt_template={apt_template} />
+      }
+      {/*<Switch>
         <Route path="/" exact>
           <Question apt_template={apt_template} question_template={question_template} />
         </Route>
@@ -36,7 +57,7 @@ const ProtectedRoutes = () => {
         <Route path="/exit-page" exact>
           <Exit apt_template={apt_template} />
         </Route>
-      </Switch>
+      </Switch>*/}
     </>
   );
 };
