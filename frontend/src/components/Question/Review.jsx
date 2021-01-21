@@ -36,8 +36,8 @@ export default function RateReview({ apt_template }) {
   // Handle button click on Review component
   function handleShareFeedback() {
     // TODO: backend save feedback into database
-    // Open next route for user - /special-offer
-    window.open('/special-offer', '_self');
+    // Open next route for user - /exit-page
+    window.open('/exit-page', '_self');
   }
 
   return (
@@ -87,7 +87,7 @@ function Review({ presets, value, handleShareFeedback }) {
   return (
     <div className='review-container'>
       <h3>
-        Review (optional):
+        What can we do better? (optional):
       </h3>
       <textarea>
         {presets[parseInt(Math.ceil(value - 1))]}
