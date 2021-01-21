@@ -10,7 +10,7 @@ export default function RateReview({ apt_template }) {
   // Track of user rates <= 3 or > 3
   const [isGood, setIsGood] = useState(true);
   const [staff] = useState('Amulya Parmar');
-  const [value, setValue] = useState(3);
+  const [value, setValue] = useState(0);
 
   // Preset responses based on the rating the user picks
   const [presets] = useState([
@@ -20,19 +20,25 @@ export default function RateReview({ apt_template }) {
     `My interaction with ${staff} was good because`,
     `My interaction with ${staff} was great because`
   ]);
-  // const [presets] = useState([
-  //   'terrible', 'poor', 'okay', 'good', 'great'
-  // ]);
 
-  // Current preset
-  // const [preset, setPreset] = useState('great');
+  // Handle button click on Rate component
+  function handleContinue() {
+    // If value less than or equal to 3, ask user for feedback
+    if (value <= 3) {
+      setIsGood(false);
+    }
+    // Else, prompt user with Google review
+    else {
+      window.open(apt_template.review_link, '_self');
+    }
+  }
 
-  // Return preset response based on given value
-  // function getPreset(value) {
-  //   const temp = presets;
-  //   console.log(temp, Math.ceil(value - 1), temp[parseInt(Math.ceil(value - 1))]);
-  //   setPreset(temp[parseInt(Math.ceil(value - 1))]);
-  // }
+  // Handle button click on Review component
+  function handleShareFeedback() {
+    // TODO: backend save feedback into database
+    // Open next route for user - /special-offer
+    window.open('/special-offer', '_self');
+  }
 
   return (
     <div>
@@ -41,16 +47,16 @@ export default function RateReview({ apt_template }) {
         Your review for Amulya Parmar:
       </h1>
       {(isGood) ? (
-        <Rate value={value} setValue={setValue} />
+        <Rate value={value} setValue={setValue} handleContinue={handleContinue} />
       ) : (
-        <Review presets={presets} value={value} />
+        <Review presets={presets} value={value} handleShareFeedback={handleShareFeedback} />
       )}
     </div>
   );
 }
 
 // Component for rate portion of review
-function Rate({ value, setValue }) {
+function Rate({ value, setValue, handleContinue }) {
   return (
     <div className='review-container'>
       <h3>
@@ -68,14 +74,16 @@ function Rate({ value, setValue }) {
         />
       </div>
       <div className='center-div'>
-        <button>Continue</button>
+        <button onClick={handleContinue}>
+          Continue
+        </button>
       </div>
     </div>
   );
 }
 
 // Component for review portion of review
-function Review({ presets, value }) {
+function Review({ presets, value, handleShareFeedback }) {
   return (
     <div className='review-container'>
       <h3>
@@ -85,7 +93,9 @@ function Review({ presets, value }) {
         {presets[parseInt(Math.ceil(value - 1))]}
       </textarea>
       <div className='center-div'>
-        <button>Share feedback</button>
+        <button onClick={handleShareFeedback}>
+          Share feedback
+        </button>
       </div>
     </div>
   );

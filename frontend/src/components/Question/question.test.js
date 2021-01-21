@@ -2,7 +2,8 @@
 const apt_template = {
   id: 12345,
   name: 'The George',
-  image: 'https://photos.zillowstatic.com/fp/f675a3f5ab964e2441d24672fd1cc615-p_e.jpg'
+  image: 'https://photos.zillowstatic.com/fp/f675a3f5ab964e2441d24672fd1cc615-p_e.jpg',
+  review_link: 'http://search.google.com/local/writereview?placeid=ChIJx41ywWL6MIgRT5xaRhoEI9g' 
 };
 
 // Landing page '/'
