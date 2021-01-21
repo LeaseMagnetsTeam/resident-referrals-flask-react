@@ -99,3 +99,37 @@
   color: #ED6E48;
   background-color: white;
 }
+
+.review-container {
+  color: black;
+  margin: 5% 5% 5% 5%;
+}
+
+.review-container h3 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.review-container textarea {
+  resize: none;
+  width: 90vw;
+  height: 90px;
+  border: 1px solid #ED6E48;
+  overflow-y: scroll;
+}
+
+.review-container button {
+  width: 80%;
+  height: 60px;
+  margin-top: 10px;
+  border-radius: 50px;
+  border: none;
+  font-size: 24px;
+  background-color: #ED6E48;
+  color: white;
+  font-weight: bold;
+}
+
+.center-div .MuiRating-sizeLarge {
+  font-size: 4rem;
+}

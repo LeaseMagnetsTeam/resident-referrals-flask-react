@@ -10,7 +10,6 @@ import {
   apt_template,
   question_template,
   question_template1,
-  question_template2,
   question_template3
 } from '../components/Question/question.test.js';
 
@@ -30,9 +29,6 @@ const ProtectedRoutes = () => {
         </Route>
         <Route path="/give-review" exact>
           <Review apt_template={apt_template} />
-        </Route>
-        <Route path="/ask-google-review" exact>
-          <Question apt_template={apt_template} question_template={question_template2} />
         </Route>
         <Route path="/special-offer" exact>
           <SpecialOffer apt_template={apt_template} />
