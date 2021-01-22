@@ -17,23 +17,34 @@ const ProtectedRoutes = () => {
   // Track which route user is on
   const [route, setRoute] = useState('/');
 
+  // Handle updating the route
+  function handleRouteUpdate(route) {
+    if (route[0] === '/') {
+      setRoute(route);
+    }
+    else {
+      window.open(route);
+      setRoute('/exit-page');
+    }
+  }
+
   return (
     <>
       <Navbar />
       {(route === '/') &&
-        <Question setRoute={setRoute} apt_template={apt_template} question_template={question_template} />
+        <Question setRoute={handleRouteUpdate} apt_template={apt_template} question_template={question_template} />
       }
       {(route === '/toured-community') &&
-        <Question setRoute={setRoute} apt_template={apt_template} question_template={question_template3} />
+        <Question setRoute={handleRouteUpdate} apt_template={apt_template} question_template={question_template3} />
       }
       {(route === '/ask-review') &&
-        <Question setRoute={setRoute} apt_template={apt_template} question_template={question_template1} />
+        <Question setRoute={handleRouteUpdate} apt_template={apt_template} question_template={question_template1} />
       }
       {(route === '/give-review') &&
-        <Review setRoute={setRoute} apt_template={apt_template} />
+        <Review setRoute={handleRouteUpdate} apt_template={apt_template} />
       }
       {(route === '/special-offer') &&
-        <SpecialOffer setRoute={setRoute} apt_template={apt_template} />
+        <SpecialOffer setRoute={handleRouteUpdate} apt_template={apt_template} />
       }
       {(route === '/exit-page') &&
         <Exit apt_template={apt_template} />
