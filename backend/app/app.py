@@ -10,7 +10,7 @@ import plivo
 app = Flask(__name__)
 conf = os.environ.get("APP_SETTINGS", "config.StagingConfig")
 app.config.from_object(conf)
-initialize_db(app, tearDown=True)
+initialize_db(app)
 CORS(app, supports_credentials=True)
 
 
@@ -262,6 +262,23 @@ def send_sms():
     phlo = phlo_client.phlo.get(phlo_id)
     response = phlo.run(**payload)
 
+"""
+    Use this route to create a new user or get all users
+    GET     /users -> lists out all users
+
+    POST    /users -> creates a new user
+        @EXAMPLE
+        {
+            "name": ...,
+            "email": ...,
+            "phoneNumber": ...,
+            "role": ...,
+            "apartment_id: ... 
+        }
+
+        Notes: apartment_id is a @REQUIRED field
+
+"""
 @app.route("/users", methods=["GET", "POST"], strict_slashes=False)
 def users():
     if request.method == "GET":
@@ -294,6 +311,27 @@ def users():
     
     return jsonify({"response": 405}), 405
 
+"""
+    Use this route to get or modify a specific user
+    GET     /users/{{user_id}} -> Returns a specific user information
+
+    PUT     /users/{{user_id}} -> changes a specific users information
+        @EXAMPLE
+        {
+            "name": ...,
+            "email": ...,
+            "phoneNumber": ...,
+            "role": ...,
+            "apartment_id: ... 
+        }
+
+        Notes: Sending an invalid apartment_id will return a 404 response code.
+                No changes will be made.
+
+    DELETE  /users/{{user_id}} -> deletes a specific user
+        Notes: Sending an invalid user_id will return a 404 response code.
+                No changes will be made.
+"""
 @app.route("/users/<int:user_id>/", methods=["GET", "PUT", "DELETE"], strict_slashes=False)
 def user(user_id):
     if request.method == "GET":
@@ -334,6 +372,22 @@ def user(user_id):
 
     return jsonify({"response": 405}), 405
 
+
+"""
+    Use this route to create a new apartment or to list out all apartments
+
+    GET     /apartments -> returns all apartments
+
+    POST    /apartments -> creates a new apartment
+        @EXAMPLE
+        {
+            "aptName": ...,
+            "website": ...,
+            "units": ...,
+            "propertyType": ..,
+            "websiteType": ...
+        }
+"""
 @app.route("/apartments", methods=["GET", "POST"], strict_slashes=False)
 def apartment():
     if request.method == "GET":
@@ -361,6 +415,28 @@ def apartment():
 
     return jsonify({"response": 405}), 405
 
+"""
+    Use this route to modify a specific apartment(community)
+    GET     /apartments/{{apartment_id}} -> returns a specific apartment information
+
+    PUT     /apartments/{{apartment_id}} -> modifies a specific apartment information
+        @EXAMPLE
+        {
+            "aptName": ...,
+            "website": ...,
+            "units": ...,
+            "propertyType": ..,
+            "websiteType": ...
+        }
+
+        Notes: Not all fields have to be changed. Specified fields in the
+                response body will be changed. Any values that are not fields
+                of Apartments will be ignored
+
+    DELETE      /apartments/{{apartment_id}} -> Deletes an apartment entry
+        Notes: Will return a 404 response if apartment_id does not exist.
+
+"""
 @app.route("/apartments/<int:apartment_id>", methods=["GET", "PUT", "DELETE"], strict_slashes=False)
 def apartments(apartment_id):
     if request.method == "GET":
