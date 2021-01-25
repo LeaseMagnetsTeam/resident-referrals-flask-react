@@ -5,7 +5,10 @@ from util import request_data
 import os
 import json
 import plivo
+from twilio.rest import Client
 
+#Twilio Client
+#client = Client(account_sid, auth_token)
 
 app = Flask(__name__)
 conf = os.environ.get("APP_SETTINGS", "config.StagingConfig")
@@ -13,11 +16,8 @@ app.config.from_object(conf)
 initialize_db(app)
 CORS(app, supports_credentials=True)
 
-
-
 with open("secrets.json") as f:
     secrets = json.load(f)
-
 
 @app.before_first_request
 def before_first_req():
@@ -262,6 +262,7 @@ def send_sms():
     phlo = phlo_client.phlo.get(phlo_id)
     response = phlo.run(**payload)
 
+
 """
     Use this route to create a new user or get all users
     GET     /users -> lists out all users
@@ -310,6 +311,7 @@ def users():
             return jsonify(user=sqldict(user)), 201
     
     return jsonify({"response": 405}), 405
+
 
 """
     Use this route to get or modify a specific user
@@ -415,6 +417,7 @@ def apartment():
 
     return jsonify({"response": 405}), 405
 
+
 """
     Use this route to modify a specific apartment(community)
     GET     /apartments/{{apartment_id}} -> returns a specific apartment information
@@ -474,6 +477,80 @@ def apartments(apartment_id):
 
         return jsonify({"response": 200})
 
+
+"""
+This route initializes the session between two users
+"""
+@app.route("/startSMS", methods=["GET"])
+def startSMS():
+    messagesFile = open('messeges.txt' , 'a')
+    session = client.proxy.services(service_sid) \
+                      .sessions \
+                      .create(unique_name='New Session' , ttl = 3500)
+    sessionSid = session.sid
+    #return ("Session has been created between two users")
+    return(sendSMS(sessionSid))
+
+
+"""
+This route sends the messeges between two users
+"""
+@app.route("/sendSMS", methods=["GET"])
+def sendSMS(sessionSid):
+    participant1 = client.proxy \
+                    .services(service_sid) \
+                    .sessions(sessionSid) \
+                    .participants \
+                    .create(friendly_name='User 1 Name', identifier='User 1 Phone Number')
+
+    participant2 = client.proxy \
+                        .services(service_sid) \
+                        .sessions(sessionSid) \
+                        .participants \
+                        .create(friendly_name='User 2 Name', identifier='User 2 Phone Number')
+
+    message_interaction = client.proxy \
+        .services(service_sid) \
+        .sessions(sessionSid) \
+        .participants(participant1.sid) \
+        .message_interactions \
+        .create(body='Reply To New User To Chat!')
+
+    message_interaction = client.proxy \
+        .services(service_sid) \
+        .sessions(sessionSid) \
+        .participants(participant2.sid) \
+        .message_interactions \
+        .create(body='Reply To New User To Chat!')
+
+    print(sessionSid)
+    #return ("Messeges has been sent")
+    return(viewSMS(sessionSid))
+
+
+"""
+This route allows users to view the messeges between the users, as well as save them in the
+messeges.txt
+"""
+@app.route("/viewSMS", methods=["GET"])
+def viewSMS(sessionSid):
+    messagesFile = open('messages.txt' , 'a')
+    messages = []
+    messagesFile.write("\n")
+    messagesFile.write('Session has been created between User 3 and User 4')
+    messagesFile.write("\n")
+    interactions = client.proxy \
+                     .services(service_sid) \
+                     .sessions(sessionSid) \
+                     .interactions \
+                     .list(limit=20)
+
+    for record in interactions:
+        messagesFile.write(record.data)
+        messagesFile.write("\n")
+        messages.append(record.data)
+    return (jsonify(messages))
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
-

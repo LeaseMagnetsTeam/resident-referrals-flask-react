@@ -2,7 +2,8 @@
 const apt_template = {
   id: 12345,
   name: 'The George',
-  image: 'https://photos.zillowstatic.com/fp/f675a3f5ab964e2441d24672fd1cc615-p_e.jpg'
+  image: 'https://photos.zillowstatic.com/fp/f675a3f5ab964e2441d24672fd1cc615-p_e.jpg',
+  review_link: 'http://search.google.com/local/writereview?placeid=ChIJx41ywWL6MIgRT5xaRhoEI9g'
 };
 
 // Landing page '/'
@@ -24,7 +25,7 @@ const question_template = {
     },
     {
       text: 'Other',
-      nextURL: '/toured-community'
+      nextURL: '/special-offer'
     }
   ]
 };
@@ -36,23 +37,23 @@ const question_template3 = {
   answers: [
     {
       text: 'Amulya Parmar',
-      nextURL: '/ask-review'
+      nextURL: '/special-offer'
     },
     {
       text: 'Amulya Parmar',
-      nextURL: '/ask-review'
+      nextURL: '/special-offer'
     },
     {
       text: 'Amulya Parmar',
-      nextURL: '/ask-review'
+      nextURL: '/special-offer'
     },
     {
       text: 'Amulya Parmar',
-      nextURL: '/ask-review'
+      nextURL: '/special-offer'
     },
     {
       text: 'Amulya Parmar',
-      nextURL: '/ask-review'
+      nextURL: '/special-offer'
     }
   ]
 };
@@ -60,27 +61,11 @@ const question_template3 = {
 // 3rd question if 'Amulya Parmar' is selected
 const question_template1 = {
   id: 65432,
-  question: 'Would you be willing to leave us a review of your experience with Amulya Parmar?',
+  question: 'Would you be willing to leave us a review of your experience at The George with Amulya Parmar?',
   answers: [
     {
       text: 'Yes!',
       nextURL: '/give-review'
-    },
-    {
-      text: 'No thank you',
-      nextURL: '/ask-google-review'
-    }
-  ]
-};
-
-// 4th question if 'No thank you' is selected
-const question_template2 = {
-  id: 98765,
-  question: 'Would you be willing to leave us a review of your experience with The George?',
-  answers: [
-    {
-      text: 'Yes!',
-      nextURL: 'http://search.google.com/local/writereview?placeid=ChIJx41ywWL6MIgRT5xaRhoEI9g'
     },
     {
       text: 'No thank you',
@@ -89,10 +74,26 @@ const question_template2 = {
   ]
 };
 
+// 4th question if 'No thank you' is selected
+// const question_template2 = {
+//   id: 98765,
+//   question: 'Would you be willing to leave us a review of The George?',
+//   answers: [
+//     {
+//       text: 'Yes!',
+//       nextURL: 'http://search.google.com/local/writereview?placeid=ChIJx41ywWL6MIgRT5xaRhoEI9g'
+//     },
+//     {
+//       text: 'No thank you',
+//       nextURL: '/exit-page'
+//     }
+//   ]
+// };
+
 export {
   apt_template,
   question_template,
   question_template1,
-  question_template2,
+  // question_template2,
   question_template3
 };

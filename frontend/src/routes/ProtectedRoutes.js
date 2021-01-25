@@ -1,5 +1,5 @@
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import React, { useState } from 'react';
+// import { Switch, Route } from 'react-router-dom';
 
 // import { SignUp, SignIn, ResetPassword } from '../components/Auth';
 import { Navbar } from "../components/Navbar"
@@ -10,15 +10,46 @@ import {
   apt_template,
   question_template,
   question_template1,
-  question_template2,
   question_template3
 } from '../components/Question/question.test.js';
 
 const ProtectedRoutes = () => {
+  // Track which route user is on
+  const [route, setRoute] = useState('/');
+
+  // Handle updating the route
+  function handleRouteUpdate(route) {
+    if (route[0] === '/') {
+      setRoute(route);
+    }
+    else {
+      window.open(route);
+      setRoute('/exit-page');
+    }
+  }
+
   return (
     <>
       <Navbar />
-      <Switch>
+      {(route === '/') &&
+        <Question setRoute={handleRouteUpdate} apt_template={apt_template} question_template={question_template} />
+      }
+      {(route === '/toured-community') &&
+        <Question setRoute={handleRouteUpdate} apt_template={apt_template} question_template={question_template3} />
+      }
+      {(route === '/ask-review') &&
+        <Question setRoute={handleRouteUpdate} apt_template={apt_template} question_template={question_template1} />
+      }
+      {(route === '/give-review') &&
+        <Review setRoute={handleRouteUpdate} apt_template={apt_template} />
+      }
+      {(route === '/special-offer') &&
+        <SpecialOffer setRoute={handleRouteUpdate} apt_template={apt_template} />
+      }
+      {(route === '/exit-page') &&
+        <Exit apt_template={apt_template} />
+      }
+      {/*<Switch>
         <Route path="/" exact>
           <Question apt_template={apt_template} question_template={question_template} />
         </Route>
@@ -31,16 +62,13 @@ const ProtectedRoutes = () => {
         <Route path="/give-review" exact>
           <Review apt_template={apt_template} />
         </Route>
-        <Route path="/ask-google-review" exact>
-          <Question apt_template={apt_template} question_template={question_template2} />
-        </Route>
         <Route path="/special-offer" exact>
           <SpecialOffer apt_template={apt_template} />
         </Route>
         <Route path="/exit-page" exact>
           <Exit apt_template={apt_template} />
         </Route>
-      </Switch>
+      </Switch>*/}
     </>
   );
 };

@@ -1,0 +1,30 @@
+
+Session has been created between User 3 and User 4
+{"body":"How are the apartments there"}
+{"body":"How are the apartments there"}
+
+Session has been created between User 3 and User 4
+{"body":"Hello nelaa"}
+{"body":"How are the apartments there"}
+{"body":"How are the apartments there"}
+
+Session has been created between User 3 and User 4
+{"body":"How are the apartments there?"}
+{"body":"How are the apartments there?"}
+
+Session has been created between User 3 and User 4
+{"body":"How are the apartments there?"}
+{"body":"How are the apartments there?"}
+
+Session has been created between User 3 and User 4
+{"body":"Reply to Neala to chat!"}
+{"body":"Reply to Neala to chat!"}
+
+Session has been created between User 3 and User 4
+{"body":"What is the lifestyle like over there?"}
+{"body":"What is the lifestyle like over there?"}
+
+Session has been created between User 3 and User 4
+{"body":"How are you?"}
+{"body":"What is the lifestyle like over there?"}
+{"body":"What is the lifestyle like over there?"}

@@ -7,7 +7,7 @@ export default function Exit({ apt_template, question_template }) {
     <div>
       <Banner name={apt_template.name} image={apt_template.image} />
       <h1 className='exit-text'>
-        Thank you for your review. <br /> We look forward to
+        Thank you for your response. <br /> We look forward to
         making {apt_template.name} a better place!
       </h1>
     </div>

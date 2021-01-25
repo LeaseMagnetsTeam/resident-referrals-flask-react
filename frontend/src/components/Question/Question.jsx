@@ -2,7 +2,7 @@ import React from 'react';
 import Banner from './Banner';
 import './question.css';
 
-export default function Question({ apt_template, question_template }) {
+export default function Question({ setRoute, apt_template, question_template }) {
   return (
     <div>
       <Banner name={apt_template.name} image={apt_template.image} />
@@ -11,7 +11,7 @@ export default function Question({ apt_template, question_template }) {
       </h1>
       {question_template.answers.map((answer, idx) => {
         return (
-          <Answer idx={idx} text={answer.text} nextURL={answer.nextURL} />
+          <Answer setRoute={setRoute} idx={idx} text={answer.text} nextURL={answer.nextURL} />
         );
       })}
     </div>
@@ -19,17 +19,15 @@ export default function Question({ apt_template, question_template }) {
 }
 
 // Answer button
-function Answer({ idx, text, nextURL }) {
+function Answer({ setRoute, idx, text, nextURL }) {
   return (
-    <a href={nextURL}>
-      <button className='answer-choice'>
-        <div className='center-div letter-container'>
-          <div className='letter'>
-            {String.fromCharCode(idx + 65)}
-          </div>
+    <button className='answer-choice' onClick={() => setRoute(nextURL)}>
+      <div className='center-div letter-container'>
+        <div className='letter'>
+          {String.fromCharCode(idx + 65)}
         </div>
-        {text}
-      </button>
-    </a>
+      </div>
+      {text}
+    </button>
   );
 }
