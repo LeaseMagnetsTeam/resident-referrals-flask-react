@@ -10,7 +10,7 @@ import plivo
 app = Flask(__name__)
 conf = os.environ.get("APP_SETTINGS", "config.StagingConfig")
 app.config.from_object(conf)
-initialize_db(app, tearDown=False)
+initialize_db(app, tearDown=True)
 CORS(app, supports_credentials=True)
 
 
@@ -238,7 +238,9 @@ def experience():
 
     return jsonify(id=lead.id, name=lead.name, email=lead.email)
 
-
+"""
+    @DEPRECRATED 
+"""
 @app.route("/send_sms/", methods=["GET", "POST"])
 def send_sms():
     # client = plivo.RestClient(auth_id, auth_token)
@@ -260,62 +262,141 @@ def send_sms():
     phlo = phlo_client.phlo.get(phlo_id)
     response = phlo.run(**payload)
 
-# ------------------ Remove before commiting
-@app.route("/user", methods=["GET", "POST", "PUT", "DELETE"])
-def user():
-    if request.method == "POST":
-        # TODO: Check params
-        j_res = request.get_json()
+@app.route("/users", methods=["GET", "POST"], strict_slashes=False)
+def users():
+    if request.method == "GET":
+        users = []
 
-        user = User(name=j_res["name"], phoneNumber=j_res["phoneNumber"], email=j_res["email"], role=j_res["role"], apartment=j_res["apartment"])
+        if apartment := request.args.get("apartment", default=None, type=int):
+            for user in User.query.filter_by(apartment_id=apartment):
+                users.append(sqldict(user))
+        else:
+            for user in User.query.all():
+                users.append(sqldict(user))
+
+        return jsonify(users=users)
+
+    elif request.method == "POST":
+            # TODO: Check params
+            body = request.get_json()
+            apartment = Apartment.query.get_or_404(body["apartment"])
+
+            user = User(name=body["name"], \
+                        phoneNumber=body["phoneNumber"], \
+                        email=body["email"], \
+                        role=body["role"], \
+                        apartment=apartment)
+            
+            db.session.add(user)
+            db.session.commit()
+
+            return jsonify(user=sqldict(user)), 201
+    
+    return jsonify({"response": 405}), 405
+
+@app.route("/users/<int:user_id>/", methods=["GET", "PUT", "DELETE"], strict_slashes=False)
+def user(user_id):
+    if request.method == "GET":
+        user = User.query.get_or_404(user_id)
         
-        print(user)
-        db.session.add(user)
-        db.session.commit()
-
         return jsonify(user=sqldict(user))
 
-    elif request.method == "DELETE":
-        id = request.args.get("id", default=None, type=int)
-        
-        user = User.query.get(id)
+    elif request.method == "DELETE":       
+        user = User.query.get_or_404(user_id)
         db.session.delete(user)
         db.session.commit()
 
-        return "2000"
+        return jsonify({"response": 200}), 200
 
-"""
-    Lists all users in database
-"""
-@app.route("/users", methods=["GET"])
-def users():
-    users = []
+    elif request.method == "PUT":
+        body = request.get_json()
+        user = User.query.get_or_404(user_id)
 
-    # Lmao walrus operator
-    if apartment := request.args.get("apartment", default=None, type=int):
-        for user in User.query.filter_by(apartment=apartment):
-            users.append(sqldict(user))
-    else:
-        for user in User.query.all():
-            users.append(sqldict(user))
+        # TODO: Data transfer objects, try and catch
+        if "name" in body:
+            user.name = body["name"]
 
-    print(users, flush=True)
-    return jsonify(users=users)
+        if "phoneNumber" in body:
+            user.phoneNumber = body["phoneNumber"]
 
-@app.route("/apartment", methods=["GET", "POST", "PUT", "DELETE"])
+        if "email" in body:
+            user.email = body["email"]
+
+        if "role" in body:
+            user.role = body["role"]
+
+        if "apartment" in body:
+            apartment = Apartment.query.get_or_404(body["apartment"])
+            user.apartment = apartment
+        
+        db.session.commit()
+        return jsonify(user=sqldict(user))
+
+    return jsonify({"response": 405}), 405
+
+@app.route("/apartments", methods=["GET", "POST"], strict_slashes=False)
 def apartment():
-    pass
+    if request.method == "GET":
+        apartments = []
+        for apartment in Apartment.query.order_by(Apartment.id).all():
+            apartments.append(sqldict(apartment))
+        #TODO: make search parameters?
+        return jsonify(apartments=apartments)
 
-"""
-    Lists all apartments in database
-"""
-@app.route("/apartments", methods=["GET"])
-def apartments():
-    apartments = []
-    for apartment in Apartment.query.all():
-        apartments.append(sqldict(apartment))
-    print(apartments, flush=True)
-    return jsonify(apartments=apartments)
+    elif request.method == "POST":
+        body = request.get_json()
+
+        # TODO: Check params
+        apartment = Apartment(\
+            aptName=body["aptName"], \
+            website=body["website"], \
+            units=body["units"], \
+            propertyType=body["propertyType"], \
+            websiteType=body["websiteType"])
+
+        db.session.add(apartment)
+        db.session.commit()
+
+        return jsonify(apartment=sqldict(apartment)), 201
+
+    return jsonify({"response": 405}), 405
+
+@app.route("/apartments/<int:apartment_id>", methods=["GET", "PUT", "DELETE"], strict_slashes=False)
+def apartments(apartment_id):
+    if request.method == "GET":
+        apartment = Apartment.query.get_or_404(apartment_id)
+        # TODO: Query parameters?
+        return jsonify(apartment=sqldict(apartment))
+
+    elif request.method == "PUT":
+        # TODO: Data transfer object implementation, this is quick and dirty for now.
+        body = request.get_json()
+        apartment = Apartment.query.get_or_404(apartment_id)
+
+        if "aptName" in body:
+            apartment.aptName = body["aptName"]
+
+        if "website" in body:
+            apartment.website = body["website"]
+
+        if "units" in body:
+            apartment.units = body["units"]
+
+        if "propertyType" in body:
+            apartment.propertyType = body["propertyType"]
+
+        if "websiteType" in body:
+            apartment.websiteType = body["websiteType"]
+
+        db.session.commit()
+        return jsonify(apartment=sqldict(apartment))
+
+    elif request.method == "DELETE":
+        apartment = Apartment.query.get_or_404(apartment_id)
+        db.session.delete(apartment)
+        db.session.commit()
+
+        return jsonify({"response": 200})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
