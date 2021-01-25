@@ -8,6 +8,7 @@ import plivo
 from twilio.rest import Client
 
 #Twilio Client
+# Kyle fix this please
 #client = Client(account_sid, auth_token)
 
 app = Flask(__name__)
