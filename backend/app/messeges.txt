@@ -1,4 +1,0 @@
-
-Session has been created between User 1 and User 2
-{"body":"Reply To Kyle To Chat!"}
-{"body":"Reply To Neala To Chat!"}
