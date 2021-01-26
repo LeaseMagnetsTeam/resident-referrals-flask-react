@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Banner from './Banner';
+import Badges from './Badges';
 
 // Material UI imports
 import Rating from '@material-ui/lab/Rating';
@@ -19,6 +20,22 @@ export default function RateReview({ setRoute, apt_template }) {
     `My interaction with ${staff} was okay because`,
     `My interaction with ${staff} was good because`,
     `My interaction with ${staff} was great because`
+  ]);
+
+  // Temp badges for staff
+  const [staffBadges] = useState([
+    { text: 'Friendly' },
+    { text: 'Helpful' },
+    { text: 'Punctual' },
+    { text: 'Resourceful' }
+  ]);
+
+  // Temp badges for apt
+  const [aptBadges] = useState([
+    { text: 'Great Amentities' },
+    { text: 'Spacious' },
+    { text: 'Pet Friendly' },
+    { text: 'Great Value' }
   ]);
 
   // Handle button click on Rate component
@@ -47,7 +64,7 @@ export default function RateReview({ setRoute, apt_template }) {
         Your review for Amulya Parmar:
       </h1>
       {(isGood) ? (
-        <Rate value={value} setValue={setValue} handleContinue={handleContinue} />
+        <Rate staffBadges={staffBadges} aptBadges={aptBadges} value={value} setValue={setValue} handleContinue={handleContinue} />
       ) : (
         <Review presets={presets} value={value} handleShareFeedback={handleShareFeedback} />
       )}
@@ -56,7 +73,7 @@ export default function RateReview({ setRoute, apt_template }) {
 }
 
 // Component for rate portion of review
-function Rate({ value, setValue, handleContinue }) {
+function Rate({ staffBadges, aptBadges, value, setValue, handleContinue }) {
   return (
     <div className='review-container'>
       <h3>
@@ -73,6 +90,14 @@ function Rate({ value, setValue, handleContinue }) {
           size="large"
         />
       </div>
+      <h3>
+        Staff feedback:
+      </h3>
+      <Badges badges={staffBadges} />
+      <h3>
+        Apartment feedback:
+      </h3>
+      <Badges badges={aptBadges} />
       <div className='center-div'>
         <button onClick={handleContinue}>
           Continue
