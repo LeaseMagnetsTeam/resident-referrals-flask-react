@@ -99,10 +99,25 @@ class User(db.Model):
     name = db.Column(db.String(200), default="")
     phoneNumber = db.Column(db.String(50), default="")
     email = db.Column(db.String(200), default="")
-    role = db.Column(db.String(50), default="") 
+    role = db.Column(db.String(50), default="")
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
 
     apartment = db.relationship("Apartment")
 
     def __repr__(self):
         return f"<User {self.id}>"
+
+
+class Reviews(db.Model):
+    '''Table for apartment reviews of staff/maintenance interaction.'''
+    __tablename__ = "reviews"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    rating = db.Column(db.Float, default=4.0)
+    review = db.Column(db.String(500), default="")
+    apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    apartment = db.relationship("Apartment")
+    user = db.relationship("User")
+
+    def __repr__(self):
+        return f"<Reviews {self.id}>"

@@ -37,6 +37,14 @@ def hello_world():
     return "hello world"
 
 
+@app.route("/init_db")
+def init_db():
+    if app.config["DEBUG"]:
+        db.drop_all()
+        db.create_all()
+    return "initialized db"
+
+
 @app.route("/followups", methods=["GET", "POST"])
 def followups():
     """
@@ -240,7 +248,7 @@ def experience():
     return jsonify(id=lead.id, name=lead.name, email=lead.email)
 
 """
-    @DEPRECRATED 
+    @DEPRECRATED
 """
 @app.route("/send_sms/", methods=["GET", "POST"])
 def send_sms():
@@ -275,7 +283,7 @@ def send_sms():
             "email": ...,
             "phoneNumber": ...,
             "role": ...,
-            "apartment_id: ... 
+            "apartment_id: ...
         }
 
         Notes: apartment_id is a @REQUIRED field
@@ -305,12 +313,12 @@ def users():
                         email=body["email"], \
                         role=body["role"], \
                         apartment=apartment)
-            
+    
             db.session.add(user)
             db.session.commit()
 
             return jsonify(user=sqldict(user)), 201
-    
+
     return jsonify({"response": 405}), 405
 
 
@@ -325,7 +333,7 @@ def users():
             "email": ...,
             "phoneNumber": ...,
             "role": ...,
-            "apartment_id: ... 
+            "apartment_id: ...
         }
 
         Notes: Sending an invalid apartment_id will return a 404 response code.
@@ -339,10 +347,10 @@ def users():
 def user(user_id):
     if request.method == "GET":
         user = User.query.get_or_404(user_id)
-        
+
         return jsonify(user=sqldict(user))
 
-    elif request.method == "DELETE":       
+    elif request.method == "DELETE":
         user = User.query.get_or_404(user_id)
         db.session.delete(user)
         db.session.commit()
@@ -369,7 +377,7 @@ def user(user_id):
         if "apartment" in body:
             apartment = Apartment.query.get_or_404(body["apartment"])
             user.apartment = apartment
-        
+
         db.session.commit()
         return jsonify(user=sqldict(user))
 
@@ -401,7 +409,7 @@ def apartment():
         return jsonify(apartments=apartments)
 
     elif request.method == "POST":
-        body = request.get_json()
+        body = request_data()
 
         # TODO: Check params
         apartment = Apartment(\
