@@ -116,7 +116,9 @@
   resize: none;
   width: 90vw;
   height: 90px;
-  border: 1px solid #ED6E48;
+  border: none;
+  border-radius: 6px;
+  background-color: #EFEFEF;
   overflow-y: scroll;
 }
 
