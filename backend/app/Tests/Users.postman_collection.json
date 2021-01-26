@@ -1,0 +1,612 @@
+{
+	"info": {
+		"_postman_id": "d7af4a6e-78d2-4090-918a-dc2e9efe9152",
+		"name": "Users",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"var user = jsonData.user;\r",
+							"var user_url = \"localhost:8080/users/\" + user.id;\r",
+							"var apartment_url = \"localhost:8080/apartments/\"\r",
+							"\r",
+							"// Peek into database to check whether it was saved\r",
+							"pm.test(\"Check ID in database\", function () {\r",
+							"    pm.sendRequest(user_url, function(err, response) {\r",
+							"        pm.expect(response.json().user.id).to.eql(user.id);\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"// Clean-up\r",
+							"pm.sendRequest({\r",
+							"    \"url\": user_url,\r",
+							"    \"method\": \"DELETE\"\r",
+							"}, function(err, res){\r",
+							"    pm.test(\"DELETE returned OK\", function(){\r",
+							"        pm.expect(res.code).to.eq(200);\r",
+							"\r",
+							"        pm.sendRequest(user_url, function(err, res){\r",
+							"            pm.test(\"user deleted in database\", function(){\r",
+							"                pm.expect(res.code).to.eq(404);\r",
+							"             })\r",
+							"             \r",
+							"             // Clean up for apartment\r",
+							"            pm.sendRequest({\r",
+							"                \"url\": apartment_url + pm.collectionVariables.get(\"apartment_id\"),\r",
+							"                \"method\": \"DELETE\"\r",
+							"            }, function(err, res){\r",
+							"                pm.sendRequest(apartment_url + pm.collectionVariables.get(\"apartment_id\"),\r",
+							"                function(err, res){\r",
+							"                    pm.test(\"apartment deleted\", function(){\r",
+							"                        pm.expect(res.code).to.eq(404);\r",
+							"                    });\r",
+							"                    pm.collectionVariables.clear();\r",
+							"                });\r",
+							"            });\r",
+							"        });\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({\r",
+							"    \"url\": \"localhost:8080/apartments\",\r",
+							"    \"method\": \"POST\",\r",
+							"    \"header\": {\r",
+							"        'Content-Type':'application/json',\r",
+							"    },\r",
+							"    \"body\": {\r",
+							"        \"mode\": \"application/json\",\r",
+							"        \"raw\": JSON.stringify({\r",
+							"            \"aptName\": \"AnotherHotel\",\r",
+							"            \"website\": \"https://www.Example.com/\",\r",
+							"            \"units\": 5,\r",
+							"            \"propertyType\": \"house\",\r",
+							"            \"websiteType\": \"Its a website\"\r",
+							"            })\r",
+							"    }\r",
+							"}, function(err, res) {\r",
+							"    var apartment = res.json().apartment\r",
+							"    pm.collectionVariables.set(\"apartment_id\", apartment.id)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Ace\",\r\n    \"phoneNumber\": \"16194206969\",\r\n    \"email\": \"Ace@gmail.com\",\r\n    \"role\": \"resident\",\r\n    \"apartment\": {{apartment_id}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/users",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var json = pm.response.json().user\r",
+							"var user_url = \"localhost:8080/users/\"\r",
+							"var apartment_url = \"localhost:8080/apartments/\"\r",
+							"\r",
+							"pm.test(\"Verify one top-level json object\", function(){\r",
+							"    pm.expect(Object.keys(pm.response.json()).length).to.eq(1)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify top-level object is keyed as user\", function() {\r",
+							"    pm.expect(Object.keys(pm.response.json())[0]).to.eq(\"user\")\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify objects inside user\", function(){\r",
+							"    pm.expect(Object.keys(json).length).to.eql(6)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify id\", function(){\r",
+							"    pm.expect(json.id).to.eql(pm.collectionVariables.get(\"id\"))\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check name\", function(){\r",
+							"    pm.expect(json.name).to.eql(pm.collectionVariables.get(\"name\"))\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check email\", function(){\r",
+							"    pm.expect(json.email).to.eql(pm.collectionVariables.get(\"email\"))\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check phoneNumber\", function(){\r",
+							"    pm.expect(json.phoneNumber).to.eql(pm.collectionVariables.get(\"phoneNumber\"))\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check role\", function(){\r",
+							"    pm.expect(json.role).to.eql(pm.collectionVariables.get(\"role\"))\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check apartment\", function(){\r",
+							"    pm.expect(json.apartment_id).to.eql(pm.collectionVariables.get(\"apartment_id\"))\r",
+							"});\r",
+							"\r",
+							"// Clean-up\r",
+							"pm.sendRequest({\r",
+							"    \"url\": user_url + pm.collectionVariables.get(\"id\"),\r",
+							"    \"method\": \"DELETE\"\r",
+							"}, function(err, res){\r",
+							"    pm.test(\"user DELETE returned OK\", function(){\r",
+							"        pm.expect(res.code).to.eq(200);\r",
+							"    });\r",
+							"    \r",
+							"        // clean-up apartment\r",
+							"        pm.sendRequest({\r",
+							"            \"url\": apartment_url + pm.collectionVariables.get(\"apartment_id\"),\r",
+							"            \"method\": \"DELETE\"\r",
+							"        }, function(err, res){\r",
+							"            pm.test(\"apartment deleted returned ok\", function(){\r",
+							"                pm.expect(res.code).to.eq(200);\r",
+							"            });\r",
+							"\r",
+							"            pm.sendRequest(apartment_url + pm.collectionVariables.get(\"apartment_id\"),\r",
+							"            function(err, res){\r",
+							"                pm.test(\"deleted apartment\", function(){\r",
+							"                    pm.expect(res.code).to.eq(404);\r",
+							"                });\r",
+							"            });\r",
+							"\r",
+							"            pm.collectionVariables.clear();\r",
+							"        });\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Create a user\r",
+							"var url = \"localhost:8080/users\";\r",
+							"\r",
+							"pm.sendRequest({\r",
+							"    \"url\": \"localhost:8080/apartments\",\r",
+							"    \"method\": \"POST\",\r",
+							"    \"header\": {\r",
+							"        'Content-Type':'application/json',\r",
+							"    },\r",
+							"    \"body\": {\r",
+							"        \"mode\": \"application/json\",\r",
+							"        \"raw\": JSON.stringify({\r",
+							"            \"aptName\": \"AnotherHotel\",\r",
+							"            \"website\": \"https://www.Example.com/\",\r",
+							"            \"units\": 5,\r",
+							"            \"propertyType\": \"house\",\r",
+							"            \"websiteType\": \"Its a website\"\r",
+							"            })\r",
+							"    }\r",
+							"}, function(err, res) {\r",
+							"    var apartment = res.json().apartment\r",
+							"    pm.collectionVariables.set(\"apartment_id\", apartment.id)\r",
+							"\r",
+							"    pm.sendRequest({\r",
+							"        \"url\": url,\r",
+							"        \"method\": \"POST\",\r",
+							"        \"header\": {\r",
+							"            'Content-Type':'application/json',\r",
+							"        },\r",
+							"        \"body\": {\r",
+							"            \"mode\": \"application/json\",\r",
+							"            \"raw\": JSON.stringify({\r",
+							"                \"name\": \"Ace\",\r",
+							"                \"phoneNumber\": \"16194206969\",\r",
+							"                \"email\": \"Ace@gmail.com\",\r",
+							"                \"role\": \"resident\",\r",
+							"                \"apartment\": apartment.id\r",
+							"            })\r",
+							"        }\r",
+							"    }, function(err, res){\r",
+							"        var user = res.json().user\r",
+							"        \r",
+							"        pm.collectionVariables.set(\"id\", user.id);\r",
+							"        pm.collectionVariables.set(\"name\", user.name);\r",
+							"        pm.collectionVariables.set(\"phoneNumber\", user.phoneNumber);\r",
+							"        pm.collectionVariables.set(\"email\", user.email);\r",
+							"        pm.collectionVariables.set(\"role\", user.role);\r",
+							"    });\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/users/{{id}}",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var user = pm.response.json().user\r",
+							"var user_url = \"localhost:8080/users/\"\r",
+							"var apartment_url = \"localhost:8080/apartments/\"\r",
+							"\r",
+							"pm.test(\"name changed\", function(){\r",
+							"    pm.expect(user.name).to.not.eq(pm.collectionVariables.get(\"name\"));\r",
+							"})\r",
+							"\r",
+							"pm.test(\"phoneNumber changed\", function(){\r",
+							"    pm.expect(user.phoneNumber).to.not.eq(pm.collectionVariables.get(\"phoneNumber\"));\r",
+							"})\r",
+							"\r",
+							"pm.test(\"email changed\", function(){\r",
+							"    pm.expect(user.email).to.not.eq(pm.collectionVariables.get(\"email\"));\r",
+							"})\r",
+							"\r",
+							"pm.test(\"role changed\", function(){\r",
+							"    pm.expect(user.role).to.not.eq(pm.collectionVariables.get(\"role\"));\r",
+							"})\r",
+							"\r",
+							"pm.test(\"apartment_id changed\", function(){\r",
+							"    pm.expect(user.apartment_id).to.not.eq(pm.collectionVariables.get(\"apartment_id\"));\r",
+							"})\r",
+							"\r",
+							"// clean up users\r",
+							"pm.sendRequest({\r",
+							"    \"url\": user_url + pm.collectionVariables.get(\"id\"),\r",
+							"    \"method\": \"DELETE\"\r",
+							"}, function(err, res) {\r",
+							"    pm.test(\"user delete returns ok\", function() {\r",
+							"        pm.expect(res.code).to.eq(200);\r",
+							"    });\r",
+							"\r",
+							"    pm.sendRequest(user_url + pm.collectionVariables.get(\"id\"), function(err, res){\r",
+							"        pm.test(\"check database for deleted entry\", function(){\r",
+							"            pm.expect(res.code).to.eq(404);\r",
+							"        });\r",
+							"    });\r",
+							"\r",
+							"    // clean up apartments\r",
+							"    pm.sendRequest({\r",
+							"        \"url\": apartment_url + pm.collectionVariables.get(\"apartment_id\"),\r",
+							"        \"method\": \"DELETE\"\r",
+							"    }, function(err ,res) {\r",
+							"        pm.test(\"delete old apartment id\", function(){\r",
+							"            pm.expect(res.code).to.eq(200);\r",
+							"        });\r",
+							"\r",
+							"        pm.sendRequest(apartment_url + pm.collectionVariables.get(\"apartment_id\"), \r",
+							"        function(err ,res){\r",
+							"            pm.test(\"check database for deleted old apartment id\", function(){\r",
+							"                pm.expect(res.code).to.eq(404);\r",
+							"            });\r",
+							"        });\r",
+							"    });\r",
+							"\r",
+							"    pm.sendRequest({\r",
+							"        \"url\": apartment_url + pm.collectionVariables.get(\"apartment_id_new\"),\r",
+							"        \"method\": \"DELETE\"\r",
+							"    }, function(err ,res) {\r",
+							"        pm.test(\"delete old apartment id\", function(){\r",
+							"            pm.expect(res.code).to.eq(200);\r",
+							"        });\r",
+							"\r",
+							"        pm.sendRequest(apartment_url + pm.collectionVariables.get(\"apartment_id_new\"), \r",
+							"        function(err ,res){\r",
+							"            pm.test(\"check database for deleted old apartment id\", function(){\r",
+							"                pm.expect(res.code).to.eq(404);\r",
+							"            });\r",
+							"            \r",
+							"            pm.collectionVariables.clear();\r",
+							"        });\r",
+							"    });\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Create a user\r",
+							"var url = \"localhost:8080/users\";\r",
+							"\r",
+							"pm.sendRequest({\r",
+							"    \"url\": \"localhost:8080/apartments\",\r",
+							"    \"method\": \"POST\",\r",
+							"    \"header\": {\r",
+							"        'Content-Type':'application/json',\r",
+							"    },\r",
+							"    \"body\": {\r",
+							"        \"mode\": \"application/json\",\r",
+							"        \"raw\": JSON.stringify({\r",
+							"            \"aptName\": \"Hilton\",\r",
+							"            \"website\": \"https://www.hilton.com/\",\r",
+							"            \"units\": 100,\r",
+							"            \"propertyType\": \"Hotel\",\r",
+							"            \"websiteType\": \"Its a website\"\r",
+							"            })\r",
+							"    }\r",
+							"}, function(err, res){\r",
+							"    var apartment = res.json().apartment\r",
+							"    pm.collectionVariables.set(\"apartment_id\", apartment.id);\r",
+							"\r",
+							"    pm.sendRequest({\r",
+							"    \"url\": url,\r",
+							"    \"method\": \"POST\",\r",
+							"    \"header\": {\r",
+							"        'Content-Type':'application/json',\r",
+							"    },\r",
+							"    \"body\": {\r",
+							"        \"mode\": \"application/json\",\r",
+							"        \"raw\": JSON.stringify({\r",
+							"            \"name\": \"Ace\",\r",
+							"            \"phoneNumber\": \"16194206969\",\r",
+							"            \"email\": \"Ace@gmail.com\",\r",
+							"            \"role\": \"resident\",\r",
+							"            \"apartment\": pm.collectionVariables.get(\"apartment_id\")\r",
+							"        })\r",
+							"    }\r",
+							"    }, function(err, res){\r",
+							"        var user = res.json().user\r",
+							"        \r",
+							"        pm.collectionVariables.set(\"id\", user.id);\r",
+							"        pm.collectionVariables.set(\"name\", user.name);\r",
+							"        pm.collectionVariables.set(\"phoneNumber\", user.phoneNumber);\r",
+							"        pm.collectionVariables.set(\"email\", user.email);\r",
+							"        pm.collectionVariables.set(\"role\", user.role);\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"pm.sendRequest({\r",
+							"    \"url\": \"localhost:8080/apartments\",\r",
+							"    \"method\": \"POST\",\r",
+							"    \"header\": {\r",
+							"        'Content-Type':'application/json',\r",
+							"    },\r",
+							"    \"body\": {\r",
+							"        \"mode\": \"application/json\",\r",
+							"        \"raw\": JSON.stringify({\r",
+							"            \"aptName\": \"AnotherHotel\",\r",
+							"            \"website\": \"https://www.Example.com/\",\r",
+							"            \"units\": 5,\r",
+							"            \"propertyType\": \"house\",\r",
+							"            \"websiteType\": \"Its a website\"\r",
+							"            })\r",
+							"    }\r",
+							"}, function(err, res) {\r",
+							"    var apartment = res.json().apartment\r",
+							"    pm.collectionVariables.set(\"apartment_id_new\", apartment.id)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"A\",\r\n    \"phoneNumber\": \"A\",\r\n    \"email\": \"A\",\r\n    \"role\": \"A\",\r\n    \"apartment\": {{apartment_id_new}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/users/{{id}}",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Create a user\r",
+							"var url = \"localhost:8080/users\";\r",
+							"\r",
+							"pm.sendRequest({\r",
+							"    \"url\": \"localhost:8080/apartments\",\r",
+							"    \"method\": \"POST\",\r",
+							"    \"header\": {\r",
+							"        'Content-Type':'application/json',\r",
+							"    },\r",
+							"    \"body\": {\r",
+							"        \"mode\": \"application/json\",\r",
+							"        \"raw\": JSON.stringify({\r",
+							"            \"aptName\": \"AnotherHotel\",\r",
+							"            \"website\": \"https://www.Example.com/\",\r",
+							"            \"units\": 5,\r",
+							"            \"propertyType\": \"house\",\r",
+							"            \"websiteType\": \"Its a website\"\r",
+							"            })\r",
+							"    }\r",
+							"}, function(err, res) {\r",
+							"    var apartment = res.json().apartment\r",
+							"    pm.collectionVariables.set(\"apartment_id\", apartment.id)\r",
+							"\r",
+							"    pm.sendRequest({\r",
+							"        \"url\": url,\r",
+							"        \"method\": \"POST\",\r",
+							"        \"header\": {\r",
+							"            'Content-Type':'application/json',\r",
+							"        },\r",
+							"        \"body\": {\r",
+							"            \"mode\": \"application/json\",\r",
+							"            \"raw\": JSON.stringify({\r",
+							"                \"name\": \"Ace\",\r",
+							"                \"phoneNumber\": \"16194206969\",\r",
+							"                \"email\": \"Ace@gmail.com\",\r",
+							"                \"role\": \"resident\",\r",
+							"                \"apartment\": apartment.id\r",
+							"            })\r",
+							"        }\r",
+							"    }, function(err, res){\r",
+							"        var user = res.json().user\r",
+							"        \r",
+							"        pm.collectionVariables.set(\"id\", user.id);\r",
+							"    });\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var response = pm.response\r",
+							"var user_url = \"localhost:8080/users/\"\r",
+							"var apartment_url = \"localhost:8080/apartments/\"\r",
+							"\r",
+							"pm.test(\"deleteion returned OK\", function(){\r",
+							"    pm.expect(response.code).to.eq(200);\r",
+							"});\r",
+							"\r",
+							"// check user deleted\r",
+							"pm.sendRequest(user_url + pm.collectionVariables.get(\"id\"), \r",
+							"    function(err ,res){\r",
+							"        pm.test(\"user deleted in database\", function(){\r",
+							"            pm.expect(res.code).to.eq(404);\r",
+							"        });\r",
+							"    });\r",
+							"\r",
+							"// clean up for apartment\r",
+							"pm.sendRequest({\r",
+							"    \"url\": apartment_url + pm.collectionVariables.get(\"apartment_id\"),\r",
+							"    \"method\": \"DELETE\"\r",
+							"}, function(err, res){\r",
+							"    pm.test(\"apartment delete return OK\", function(){\r",
+							"        pm.expect(res.code).to.eq(200);\r",
+							"    });\r",
+							"\r",
+							"    pm.sendRequest(apartment_url + pm.collectionVariables.get(\"apartment_id\"),\r",
+							"    function(err, res){\r",
+							"        pm.test(\"apartment deleted in database\", function(){\r",
+							"            pm.expect(res.code).to.eq(404);\r",
+							"        });\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/users/{{id}}",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "apartment_id",
+			"value": ""
+		},
+		{
+			"key": "id",
+			"value": ""
+		}
+	]
+}

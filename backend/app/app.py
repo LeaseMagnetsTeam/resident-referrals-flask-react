@@ -5,19 +5,20 @@ from util import request_data
 import os
 import json
 import plivo
+from twilio.rest import Client
 
+#Twilio Client
+# Kyle fix this please
+#client = Client(account_sid, auth_token)
 
 app = Flask(__name__)
 conf = os.environ.get("APP_SETTINGS", "config.StagingConfig")
 app.config.from_object(conf)
-initialize_db(app, tearDown=False)
+initialize_db(app)
 CORS(app, supports_credentials=True)
-
-
 
 with open("secrets.json") as f:
     secrets = json.load(f)
-
 
 @app.before_first_request
 def before_first_req():
@@ -238,7 +239,9 @@ def experience():
 
     return jsonify(id=lead.id, name=lead.name, email=lead.email)
 
-
+"""
+    @DEPRECRATED 
+"""
 @app.route("/send_sms/", methods=["GET", "POST"])
 def send_sms():
     # client = plivo.RestClient(auth_id, auth_token)
@@ -260,63 +263,295 @@ def send_sms():
     phlo = phlo_client.phlo.get(phlo_id)
     response = phlo.run(**payload)
 
-# ------------------ Remove before commiting
-@app.route("/user", methods=["GET", "POST", "PUT", "DELETE"])
-def user():
-    if request.method == "POST":
-        # TODO: Check params
-        j_res = request.get_json()
 
-        user = User(name=j_res["name"], phoneNumber=j_res["phoneNumber"], email=j_res["email"], role=j_res["role"], apartment=j_res["apartment"])
+"""
+    Use this route to create a new user or get all users
+    GET     /users -> lists out all users
+
+    POST    /users -> creates a new user
+        @EXAMPLE
+        {
+            "name": ...,
+            "email": ...,
+            "phoneNumber": ...,
+            "role": ...,
+            "apartment_id: ... 
+        }
+
+        Notes: apartment_id is a @REQUIRED field
+
+"""
+@app.route("/users", methods=["GET", "POST"], strict_slashes=False)
+def users():
+    if request.method == "GET":
+        users = []
+
+        if apartment := request.args.get("apartment", default=None, type=int):
+            for user in User.query.filter_by(apartment_id=apartment):
+                users.append(sqldict(user))
+        else:
+            for user in User.query.all():
+                users.append(sqldict(user))
+
+        return jsonify(users=users)
+
+    elif request.method == "POST":
+            # TODO: Check params
+            body = request.get_json()
+            apartment = Apartment.query.get_or_404(body["apartment"])
+
+            user = User(name=body["name"], \
+                        phoneNumber=body["phoneNumber"], \
+                        email=body["email"], \
+                        role=body["role"], \
+                        apartment=apartment)
+            
+            db.session.add(user)
+            db.session.commit()
+
+            return jsonify(user=sqldict(user)), 201
+    
+    return jsonify({"response": 405}), 405
+
+
+"""
+    Use this route to get or modify a specific user
+    GET     /users/{{user_id}} -> Returns a specific user information
+
+    PUT     /users/{{user_id}} -> changes a specific users information
+        @EXAMPLE
+        {
+            "name": ...,
+            "email": ...,
+            "phoneNumber": ...,
+            "role": ...,
+            "apartment_id: ... 
+        }
+
+        Notes: Sending an invalid apartment_id will return a 404 response code.
+                No changes will be made.
+
+    DELETE  /users/{{user_id}} -> deletes a specific user
+        Notes: Sending an invalid user_id will return a 404 response code.
+                No changes will be made.
+"""
+@app.route("/users/<int:user_id>/", methods=["GET", "PUT", "DELETE"], strict_slashes=False)
+def user(user_id):
+    if request.method == "GET":
+        user = User.query.get_or_404(user_id)
         
-        print(user)
-        db.session.add(user)
-        db.session.commit()
-
         return jsonify(user=sqldict(user))
 
-    elif request.method == "DELETE":
-        id = request.args.get("id", default=None, type=int)
-        
-        user = User.query.get(id)
+    elif request.method == "DELETE":       
+        user = User.query.get_or_404(user_id)
         db.session.delete(user)
         db.session.commit()
 
-        return "2000"
+        return jsonify({"response": 200}), 200
+
+    elif request.method == "PUT":
+        body = request.get_json()
+        user = User.query.get_or_404(user_id)
+
+        # TODO: Data transfer objects, try and catch
+        if "name" in body:
+            user.name = body["name"]
+
+        if "phoneNumber" in body:
+            user.phoneNumber = body["phoneNumber"]
+
+        if "email" in body:
+            user.email = body["email"]
+
+        if "role" in body:
+            user.role = body["role"]
+
+        if "apartment" in body:
+            apartment = Apartment.query.get_or_404(body["apartment"])
+            user.apartment = apartment
+        
+        db.session.commit()
+        return jsonify(user=sqldict(user))
+
+    return jsonify({"response": 405}), 405
+
 
 """
-    Lists all users in database
+    Use this route to create a new apartment or to list out all apartments
+
+    GET     /apartments -> returns all apartments
+
+    POST    /apartments -> creates a new apartment
+        @EXAMPLE
+        {
+            "aptName": ...,
+            "website": ...,
+            "units": ...,
+            "propertyType": ..,
+            "websiteType": ...
+        }
 """
-@app.route("/users", methods=["GET"])
-def users():
-    users = []
-
-    # Lmao walrus operator
-    if apartment := request.args.get("apartment", default=None, type=int):
-        for user in User.query.filter_by(apartment=apartment):
-            users.append(sqldict(user))
-    else:
-        for user in User.query.all():
-            users.append(sqldict(user))
-
-    print(users, flush=True)
-    return jsonify(users=users)
-
-@app.route("/apartment", methods=["GET", "POST", "PUT", "DELETE"])
+@app.route("/apartments", methods=["GET", "POST"], strict_slashes=False)
 def apartment():
-    pass
+    if request.method == "GET":
+        apartments = []
+        for apartment in Apartment.query.order_by(Apartment.id).all():
+            apartments.append(sqldict(apartment))
+        #TODO: make search parameters?
+        return jsonify(apartments=apartments)
+
+    elif request.method == "POST":
+        body = request.get_json()
+
+        # TODO: Check params
+        apartment = Apartment(\
+            aptName=body["aptName"], \
+            website=body["website"], \
+            units=body["units"], \
+            propertyType=body["propertyType"], \
+            websiteType=body["websiteType"])
+
+        db.session.add(apartment)
+        db.session.commit()
+
+        return jsonify(apartment=sqldict(apartment)), 201
+
+    return jsonify({"response": 405}), 405
+
 
 """
-    Lists all apartments in database
+    Use this route to modify a specific apartment(community)
+    GET     /apartments/{{apartment_id}} -> returns a specific apartment information
+
+    PUT     /apartments/{{apartment_id}} -> modifies a specific apartment information
+        @EXAMPLE
+        {
+            "aptName": ...,
+            "website": ...,
+            "units": ...,
+            "propertyType": ..,
+            "websiteType": ...
+        }
+
+        Notes: Not all fields have to be changed. Specified fields in the
+                response body will be changed. Any values that are not fields
+                of Apartments will be ignored
+
+    DELETE      /apartments/{{apartment_id}} -> Deletes an apartment entry
+        Notes: Will return a 404 response if apartment_id does not exist.
+
 """
-@app.route("/apartments", methods=["GET"])
-def apartments():
-    apartments = []
-    for apartment in Apartment.query.all():
-        apartments.append(sqldict(apartment))
-    print(apartments, flush=True)
-    return jsonify(apartments=apartments)
+@app.route("/apartments/<int:apartment_id>", methods=["GET", "PUT", "DELETE"], strict_slashes=False)
+def apartments(apartment_id):
+    if request.method == "GET":
+        apartment = Apartment.query.get_or_404(apartment_id)
+        # TODO: Query parameters?
+        return jsonify(apartment=sqldict(apartment))
+
+    elif request.method == "PUT":
+        # TODO: Data transfer object implementation, this is quick and dirty for now.
+        body = request.get_json()
+        apartment = Apartment.query.get_or_404(apartment_id)
+
+        if "aptName" in body:
+            apartment.aptName = body["aptName"]
+
+        if "website" in body:
+            apartment.website = body["website"]
+
+        if "units" in body:
+            apartment.units = body["units"]
+
+        if "propertyType" in body:
+            apartment.propertyType = body["propertyType"]
+
+        if "websiteType" in body:
+            apartment.websiteType = body["websiteType"]
+
+        db.session.commit()
+        return jsonify(apartment=sqldict(apartment))
+
+    elif request.method == "DELETE":
+        apartment = Apartment.query.get_or_404(apartment_id)
+        db.session.delete(apartment)
+        db.session.commit()
+
+        return jsonify({"response": 200})
+
+
+"""
+This route initializes the session between two users
+"""
+@app.route("/startSMS", methods=["GET"])
+def startSMS():
+    messagesFile = open('messeges.txt' , 'a')
+    session = client.proxy.services(service_sid) \
+                      .sessions \
+                      .create(unique_name='New Session' , ttl = 3500)
+    sessionSid = session.sid
+    #return ("Session has been created between two users")
+    return(sendSMS(sessionSid))
+
+
+"""
+This route sends the messeges between two users
+"""
+@app.route("/sendSMS", methods=["GET"])
+def sendSMS(sessionSid):
+    participant1 = client.proxy \
+                    .services(service_sid) \
+                    .sessions(sessionSid) \
+                    .participants \
+                    .create(friendly_name='User 1 Name', identifier='User 1 Phone Number')
+
+    participant2 = client.proxy \
+                        .services(service_sid) \
+                        .sessions(sessionSid) \
+                        .participants \
+                        .create(friendly_name='User 2 Name', identifier='User 2 Phone Number')
+
+    message_interaction = client.proxy \
+        .services(service_sid) \
+        .sessions(sessionSid) \
+        .participants(participant1.sid) \
+        .message_interactions \
+        .create(body='Reply To New User To Chat!')
+
+    message_interaction = client.proxy \
+        .services(service_sid) \
+        .sessions(sessionSid) \
+        .participants(participant2.sid) \
+        .message_interactions \
+        .create(body='Reply To New User To Chat!')
+
+    print(sessionSid)
+    #return ("Messeges has been sent")
+    return(viewSMS(sessionSid))
+
+
+"""
+This route allows users to view the messeges between the users, as well as save them in the
+messeges.txt
+"""
+@app.route("/viewSMS", methods=["GET"])
+def viewSMS(sessionSid):
+    messagesFile = open('messages.txt' , 'a')
+    messages = []
+    messagesFile.write("\n")
+    messagesFile.write('Session has been created between User 3 and User 4')
+    messagesFile.write("\n")
+    interactions = client.proxy \
+                     .services(service_sid) \
+                     .sessions(sessionSid) \
+                     .interactions \
+                     .list(limit=20)
+
+    for record in interactions:
+        messagesFile.write(record.data)
+        messagesFile.write("\n")
+        messages.append(record.data)
+    return (jsonify(messages))
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
-
