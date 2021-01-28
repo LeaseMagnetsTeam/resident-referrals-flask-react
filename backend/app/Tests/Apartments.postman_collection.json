@@ -1,0 +1,374 @@
+{
+	"info": {
+		"_postman_id": "2847b65b-9b54-4ec2-80ff-63ba2443332a",
+		"name": "Apartments",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Apartment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var response = pm.response\r",
+							"var apartment = response.json().apartment\r",
+							"var url = \"localhost:8080/apartments/\"\r",
+							"\r",
+							"pm.test(\"response returned OK\", function(){\r",
+							"    pm.expect(response.code).to.eq(201);\r",
+							"});\r",
+							"\r",
+							"// Clean-up\r",
+							"pm.sendRequest({\r",
+							"    \"url\": url + apartment.id,\r",
+							"    \"method\": \"DELETE\"},\r",
+							"    function(err, res){\r",
+							"        pm.test(\"delete returned OK\", function(){\r",
+							"            pm.expect(res.code).to.eq(200);\r",
+							"        });\r",
+							"\r",
+							"        pm.sendRequest(url + apartment.id, function(err, res){\r",
+							"            pm.test(\"apartment deleted in database\", function(){\r",
+							"                pm.expect(res.code).to.eq(404);\r",
+							"            });\r",
+							"        });\r",
+							"    });"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"aptName\": \"Hilton\",\r\n    \"website\": \"https://www.hilton.com/\",\r\n    \"units\": 100,\r\n    \"propertyType\": \"Hotel\",\r\n    \"websiteType\": \"Its a website\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/apartments",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"apartments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Apartment",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var url = \"localhost:8080/apartments/\"\r",
+							"\r",
+							"pm.sendRequest({\r",
+							"    \"url\": url,\r",
+							"    \"method\": \"POST\",\r",
+							"    \"header\":{\r",
+							"        \"Content-Type\": \"application/json\"\r",
+							"    },\r",
+							"    \"body\":{\r",
+							"        \"mode\": \"application/json\",\r",
+							"        \"raw\": JSON.stringify({\r",
+							"            \"aptName\": \"Hilton\",\r",
+							"            \"website\": \"https://www.hilton.com/\",\r",
+							"            \"units\": 100,\r",
+							"            \"propertyType\": \"Hotel\",\r",
+							"            \"websiteType\": \"Its a website\"\r",
+							"        })\r",
+							"    }\r",
+							"}, function(err, res){\r",
+							"    var apartment = res.json().apartment\r",
+							"    pm.collectionVariables.set(\"id\", apartment.id);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var response = pm.response\r",
+							"var apartment = response.json().apartment\r",
+							"var url = \"localhost:8080/apartments/\"\r",
+							"\r",
+							"pm.test(\"response returned OK\", function(){\r",
+							"    pm.expect(response.code).to.eq(200);\r",
+							"});\r",
+							"\r",
+							"// Clean-up\r",
+							"pm.sendRequest({\r",
+							"    \"url\": url + pm.collectionVariables.get(\"id\"),\r",
+							"    \"method\": \"DELETE\"\r",
+							"}, function(err, res){\r",
+							"    pm.test(\"deletion response returned OK\", function(){\r",
+							"        pm.expect(res.code).to.eq(200);\r",
+							"    });\r",
+							"\r",
+							"    pm.sendRequest(url + pm.collectionVariables.get(\"id\"),\r",
+							"        function(err, res){\r",
+							"            pm.test(\"apartment deleted in database\", function(){\r",
+							"                pm.expect(res.code).to.eq(404);\r",
+							"            });\r",
+							"        });\r",
+							"        \r",
+							"    pm.collectionVariables.clear();\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/apartments/{{id}}",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"apartments",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Apartment",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var url = \"localhost:8080/apartments/\"\r",
+							"\r",
+							"pm.sendRequest({\r",
+							"    \"url\": url,\r",
+							"    \"method\": \"POST\",\r",
+							"    \"header\":{\r",
+							"        \"Content-Type\": \"application/json\"\r",
+							"    },\r",
+							"    \"body\":{\r",
+							"        \"mode\": \"application/json\",\r",
+							"        \"raw\": JSON.stringify({\r",
+							"            \"aptName\": \"Hilton\",\r",
+							"            \"website\": \"https://www.hilton.com/\",\r",
+							"            \"units\": 100,\r",
+							"            \"propertyType\": \"Hotel\",\r",
+							"            \"websiteType\": \"Its a website\"\r",
+							"        })\r",
+							"    }\r",
+							"}, function(err, res){\r",
+							"    var apartment = res.json().apartment\r",
+							"\r",
+							"    pm.collectionVariables.set(\"id\", apartment.id);\r",
+							"    pm.collectionVariables.set(\"aptName\", apartment.aptName);\r",
+							"    pm.collectionVariables.set(\"website\", apartment.website);\r",
+							"    pm.collectionVariables.set(\"units\", apartment.units);\r",
+							"    pm.collectionVariables.set(\"propertyType\", apartment.propertyType);\r",
+							"    pm.collectionVariables.set(\"websiteType\", apartment.websiteType);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var response = pm.response\r",
+							"var apartment = response.json().apartment\r",
+							"var colvars = pm.collectionVariables\r",
+							"var url = \"localhost:8080/apartments/\"\r",
+							"\r",
+							"pm.test(\"request returned OK\", function(){\r",
+							"    pm.expect(response.code).to.eq(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"ID has not changed\", function(){\r",
+							"    pm.expect(apartment.id).to.eq(colvars.get(\"id\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"name has changed\", function(){\r",
+							"    pm.expect(apartment.aptName).to.not.eq(colvars.get(\"aptName\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"propertyType has changed\", function(){\r",
+							"    pm.expect(apartment.propertyType).to.not.eq(colvars.get(\"propertyType\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"units has changed\", function(){\r",
+							"    pm.expect(apartment.units).to.not.eq(colvars.get(\"units\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"website has changed\", function(){\r",
+							"    pm.expect(apartment.website).to.not.eq(colvars.get(\"website\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"websiteType has changed\", function(){\r",
+							"    pm.expect(apartment.websiteType).to.not.eq(colvars.get(\"websiteType\"));\r",
+							"});\r",
+							"\r",
+							"pm.sendRequest({\r",
+							"    \"url\": url + apartment.id,\r",
+							"    \"method\": \"DELETE\"\r",
+							"}, function(err, res){\r",
+							"    pm.test(\"apartment delete returned OK\", function(){\r",
+							"        pm.expect(res.code).to.eq(200);\r",
+							"    });\r",
+							"\r",
+							"    pm.sendRequest(url + apartment.id, function(err, res){\r",
+							"        pm.expect(res.code).to.eq(404);\r",
+							"    });\r",
+							"\r",
+							"    pm.collectionVariables.clear();\r",
+							"})\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"aptName\": \"a\",\r\n    \"website\": \"a\",\r\n    \"units\": 1,\r\n    \"propertyType\": \"a\",\r\n    \"websiteType\": \"a\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/apartments/{{id}}",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"apartments",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete An Apartment",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var url = \"localhost:8080/apartments/\"\r",
+							"\r",
+							"pm.sendRequest({\r",
+							"    \"url\": url,\r",
+							"    \"method\": \"POST\",\r",
+							"    \"header\":{\r",
+							"        \"Content-Type\": \"application/json\"\r",
+							"    },\r",
+							"    \"body\":{\r",
+							"        \"mode\": \"application/json\",\r",
+							"        \"raw\": JSON.stringify({\r",
+							"            \"aptName\": \"Hilton\",\r",
+							"            \"website\": \"https://www.hilton.com/\",\r",
+							"            \"units\": 100,\r",
+							"            \"propertyType\": \"Hotel\",\r",
+							"            \"websiteType\": \"Its a website\"\r",
+							"        })\r",
+							"    }\r",
+							"}, function(err, res){\r",
+							"    var apartment = res.json().apartment\r",
+							"\r",
+							"    pm.collectionVariables.set(\"id\", apartment.id)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var response = pm.response\r",
+							"var colvars = pm.collectionVariables\r",
+							"var url = \"localhost:8080/apartments/\"\r",
+							"\r",
+							"pm.test(\"request returned OK\", function(){\r",
+							"    pm.expect(response.code).to.eq(200);\r",
+							"});\r",
+							"\r",
+							"pm.sendRequest(url + colvars.get(\"id\"), function(err, res){\r",
+							"    pm.test(\"apartment deleted in database\", function(){\r",
+							"        pm.expect(res.code).to.eq(404);\r",
+							"    });\r",
+							"\r",
+							"    colvars.clear();\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/apartments/{{id}}",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"apartments",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
