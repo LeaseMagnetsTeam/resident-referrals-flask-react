@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Banner from './Banner';
 import Badges from './Badges';
 
@@ -7,11 +7,13 @@ import Rating from '@material-ui/lab/Rating';
 
 import './question.css';
 
-export default function RateReview({ setRoute, apt_template }) {
+export default function RateReview({ value, setValue, setFeedback, setRoute, apt_template, selectedStaffBadges, selectedAptBadges, setSelectedStaffBadges, setSelectedAptBadges }) {
   // Track of user rates <= 3 or > 3
   const [isGood, setIsGood] = useState(true);
   const [staff] = useState('Amulya Parmar');
-  const [value, setValue] = useState(0);
+
+  // Reference textarea's text
+  const feedbackRef = useRef();
 
   // Preset responses based on the rating the user picks
   const [presets] = useState([
@@ -52,7 +54,9 @@ export default function RateReview({ setRoute, apt_template }) {
 
   // Handle button click on Review component
   function handleShareFeedback() {
-    // TODO: backend save feedback into database
+    // Get textarea feedback & put it into feedback state
+    const newFeedback = feedbackRef.current.value;
+    setFeedback(newFeedback);
     // Open next route for user - /exit-page
     setRoute('/exit-page');
   }
@@ -64,16 +68,31 @@ export default function RateReview({ setRoute, apt_template }) {
         Your review for Amulya Parmar:
       </h1>
       {(isGood) ? (
-        <Rate staffBadges={staffBadges} aptBadges={aptBadges} value={value} setValue={setValue} handleContinue={handleContinue} />
+        <Rate
+          staffBadges={staffBadges}
+          aptBadges={aptBadges}
+          value={value}
+          setValue={setValue}
+          handleContinue={handleContinue}
+          selectedStaffBadges={selectedStaffBadges}
+          selectedAptBadges={selectedAptBadges}
+          setSelectedStaffBadges={setSelectedStaffBadges}
+          setSelectedAptBadges={setSelectedAptBadges}
+        />
       ) : (
-        <Review presets={presets} value={value} handleShareFeedback={handleShareFeedback} />
+        <Review
+          feedbackRef={feedbackRef}
+          presets={presets}
+          value={value}
+          handleShareFeedback={handleShareFeedback}
+        />
       )}
     </div>
   );
 }
 
 // Component for rate portion of review
-function Rate({ staffBadges, aptBadges, value, setValue, handleContinue }) {
+function Rate({ staffBadges, aptBadges, value, setValue, handleContinue, selectedStaffBadges, selectedAptBadges, setSelectedStaffBadges, setSelectedAptBadges }) {
   return (
     <div className='review-container'>
       <h3>
@@ -93,11 +112,19 @@ function Rate({ staffBadges, aptBadges, value, setValue, handleContinue }) {
       <h3>
         Staff feedback:
       </h3>
-      <Badges badges={staffBadges} />
+      <Badges
+        badges={staffBadges}
+        selected={selectedStaffBadges}
+        setSelected={setSelectedStaffBadges}
+      />
       <h3>
         Apartment feedback:
       </h3>
-      <Badges badges={aptBadges} />
+      <Badges
+        badges={aptBadges}
+        selected={selectedAptBadges}
+        setSelected={setSelectedAptBadges}
+      />
       <div className='center-div'>
         <button onClick={handleContinue}>
           Continue
@@ -108,13 +135,13 @@ function Rate({ staffBadges, aptBadges, value, setValue, handleContinue }) {
 }
 
 // Component for review portion of review
-function Review({ presets, value, handleShareFeedback }) {
+function Review({ feedbackRef, presets, value, handleShareFeedback }) {
   return (
     <div className='review-container'>
       <h3>
         What can we do better? (optional):
       </h3>
-      <textarea>
+      <textarea ref={feedbackRef}>
         {presets[parseInt(Math.ceil(value - 1))]}
       </textarea>
       <div className='center-div'>

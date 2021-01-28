@@ -8,7 +8,7 @@ export default function Navbar() {
   return (
     <div className='navbar' onClick={openLandingPage}>
       <span className='white'>RESIDENTS.
-      <span className='light-grey'>CO</span></span>
+      <span className='light-grey'>ME</span></span>
     </div>
   );
 }

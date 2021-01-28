@@ -1,8 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Banner from './Banner';
 import './question.css';
 
-export default function Exit({ apt_template, question_template }) {
+export default function Exit({ apt_template, question_template, rating, feedback, selectedStaffBadges, selectedAptBadges }) {
+  // After all data is collected, send data to backend via json
+  function sendData() {
+    const data = {
+      apartment_id: apt_template.id,
+      apartment_name: apt_template.name,
+      interacted_with: "Amulya Parmar (HARDCODED)",
+      rating: parseInt(rating),
+      optional_feedback: feedback,
+      staff_badges: selectedStaffBadges,
+      apt_badges: selectedAptBadges
+    };
+    // TODO: Send data to a backend route 
+    console.log(data);
+  }
+
+  useEffect(() => {
+    sendData();
+  }, []);
+
   return (
     <div>
       <Banner name={apt_template.name} image={apt_template.image} />
