@@ -3,11 +3,36 @@
 # Script to run backend server and frontend server
 #
 # Run "./bin/frontend" in terminal to use
+# Run "./bin/frontend quick" for quicker server load
+# Run "./bin/frontend docker" for docker server load (slower)
 
 # Stop on errors
 # See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
 set -Eeuo pipefail
 
-# Start frontend server
+# Sanity check command line options
+usage() {
+  echo "Usage: $0 (quick|docker)"
+}
+
+if [ $# -ne 1 ]; then
+  usage
+  exit 1
+fi
+
+# Enter frontend directory
 cd frontend
-docker-compose up --build
+
+# Parse command line options
+case $1 in
+  "quick")
+      npm start
+      ;;
+  "docker")
+      docker-compose up --build
+      ;;
+  *)
+      usage
+      exit 1
+      ;;
+esac
