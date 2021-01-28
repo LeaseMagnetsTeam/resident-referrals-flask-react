@@ -2,7 +2,7 @@ import React from 'react';
 import Banner from './Banner';
 import './question.css';
 
-export default function Question({ setRoute, apt_template, question_template }) {
+export default function Question({ setRoute, apt_template, question_template, setWho }) {
   return (
     <div>
       <Banner name={apt_template.name} image={apt_template.image} />
@@ -11,7 +11,7 @@ export default function Question({ setRoute, apt_template, question_template }) 
       </h1>
       {question_template.answers.map((answer, idx) => {
         return (
-          <Answer setRoute={setRoute} idx={idx} text={answer.text} nextURL={answer.nextURL} />
+          <Answer setWho={setWho} setRoute={setRoute} idx={idx} text={answer.text} nextURL={answer.nextURL} />
         );
       })}
     </div>
@@ -19,9 +19,20 @@ export default function Question({ setRoute, apt_template, question_template }) 
 }
 
 // Answer button
-function Answer({ setRoute, idx, text, nextURL }) {
+function Answer({ setWho, setRoute, idx, text, nextURL }) {
+  // Handle button click
+  function handleClick() {
+    setRoute(nextURL);
+    // If this question is asking for who the user interacted with
+    if (setWho) setWho(text);
+    // if (typeof(setWho) === 'function') {
+    //   console.log("yessir");
+    //   //setWho(text);
+    // }
+  }
+
   return (
-    <button className='answer-choice' onClick={() => setRoute(nextURL)}>
+    <button className='answer-choice' onClick={handleClick}>
       <div className='center-div letter-container'>
         <div className='letter'>
           {String.fromCharCode(idx + 65)}

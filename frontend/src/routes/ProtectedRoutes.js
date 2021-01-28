@@ -9,15 +9,17 @@ import {
   apt_template,
   question_template,
   question_template1,
-  question_template3
+  question_template2,
+  question_template3,
+  question_template4
 } from '../components/Question/question.test.js';
 
 const ProtectedRoutes = () => {
   // Track which route user is on
   const [route, setRoute] = useState('/');
 
-  // TODO: Track 'who' for tour or maintenance route
-
+  // Track 'who' for tour, lease or maintenance route
+  const [who, setWho] = useState("");
   // Track rating of user's interaction with staff/apt
   const [rating, setRating] = useState(4);
   // Track selected badges for staff
@@ -50,9 +52,26 @@ const ProtectedRoutes = () => {
       }
       {(route === '/toured-community') &&
         <Question
+          setWho={setWho}
           setRoute={handleRouteUpdate}
           apt_template={apt_template}
           question_template={question_template3}
+        />
+      }
+      {(route === '/maintenance-completed') &&
+        <Question
+          setWho={setWho}
+          setRoute={handleRouteUpdate}
+          apt_template={apt_template}
+          question_template={question_template2}
+        />
+      }
+      {(route === '/signed-lease') &&
+        <Question
+          setWho={setWho}
+          setRoute={handleRouteUpdate}
+          apt_template={apt_template}
+          question_template={question_template4}
         />
       }
       {(route === '/ask-review') &&
@@ -64,6 +83,7 @@ const ProtectedRoutes = () => {
       }
       {(route === '/give-review') &&
         <Review
+          staff={who}
           setRoute={handleRouteUpdate}
           setFeedback={setFeedback}
           value={rating}
@@ -83,6 +103,7 @@ const ProtectedRoutes = () => {
       }
       {(route === '/exit-page') &&
         <Exit
+          who={who}
           apt_template={apt_template}
           rating={rating}
           feedback={feedback}

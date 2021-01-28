@@ -17,14 +17,42 @@ const question_template = {
     },
     {
       text: 'Finished signing a lease',
-      nextURL: '/toured-community'
+      nextURL: '/signed-lease'
     },
     {
       text: 'My maintenance request was completed',
-      nextURL: '/toured-community'
+      nextURL: '/maintenance-completed'
     },
     {
       text: 'Other',
+      nextURL: '/special-offer'
+    }
+  ]
+};
+
+// 2nd question if 'maintenance request' is selected
+const question_template2 = {
+  id: 12345,
+  question: 'Who completed your maintenance request?',
+  answers: [
+    {
+      text: 'Jonathan Chuang',
+      nextURL: '/special-offer'
+    },
+    {
+      text: 'Jonathan Chuang',
+      nextURL: '/special-offer'
+    },
+    {
+      text: 'Jonathan Chuang',
+      nextURL: '/special-offer'
+    },
+    {
+      text: 'Jonathan Chuang',
+      nextURL: '/special-offer'
+    },
+    {
+      text: 'Not sure/Other',
       nextURL: '/special-offer'
     }
   ]
@@ -52,7 +80,31 @@ const question_template3 = {
       nextURL: '/special-offer'
     },
     {
-      text: 'Amulya Parmar',
+      text: 'Not sure/Other',
+      nextURL: '/special-offer'
+    }
+  ]
+};
+
+// 2nd question if 'signed lease' is selected
+const question_template4 = {
+  id: 87654,
+  question: 'Congrats! Who helped you sign your lease?',
+  answers: [
+    {
+      text: 'Brandon Rea',
+      nextURL: '/special-offer'
+    },
+    {
+      text: 'Brandon Rea',
+      nextURL: '/special-offer'
+    },
+    {
+      text: 'Brandon Rea',
+      nextURL: '/special-offer'
+    },
+    {
+      text: 'Not sure/Other',
       nextURL: '/special-offer'
     }
   ]
@@ -61,7 +113,7 @@ const question_template3 = {
 // 3rd question if 'Amulya Parmar' is selected
 const question_template1 = {
   id: 65432,
-  question: 'Would you be willing to leave us a review of your experience at The George with Amulya Parmar?',
+  question: 'Would you be willing to leave us a review of your experience at The George?',
   answers: [
     {
       text: 'Yes!',
@@ -94,6 +146,7 @@ export {
   apt_template,
   question_template,
   question_template1,
-  // question_template2,
-  question_template3
+  question_template2,
+  question_template3,
+  question_template4
 };

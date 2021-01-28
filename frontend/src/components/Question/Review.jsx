@@ -7,21 +7,20 @@ import Rating from '@material-ui/lab/Rating';
 
 import './question.css';
 
-export default function RateReview({ value, setValue, setFeedback, setRoute, apt_template, selectedStaffBadges, selectedAptBadges, setSelectedStaffBadges, setSelectedAptBadges }) {
+export default function RateReview({ staff, value, setValue, setFeedback, setRoute, apt_template, selectedStaffBadges, selectedAptBadges, setSelectedStaffBadges, setSelectedAptBadges }) {
   // Track of user rates <= 3 or > 3
   const [isGood, setIsGood] = useState(true);
-  const [staff] = useState('Amulya Parmar');
 
   // Reference textarea's text
   const feedbackRef = useRef();
 
   // Preset responses based on the rating the user picks
   const [presets] = useState([
-    `My interaction with ${staff} was terrible because`,
-    `My interaction with ${staff} was poor because`,
-    `My interaction with ${staff} was okay because`,
-    `My interaction with ${staff} was good because`,
-    `My interaction with ${staff} was great because`
+    `My interaction with ${(staff) ? staff : apt_template.name} was terrible because`,
+    `My interaction with ${(staff) ? staff : apt_template.name} was poor because`,
+    `My interaction with ${(staff) ? staff : apt_template.name} was okay because`,
+    `My interaction with ${(staff) ? staff : apt_template.name} was good because`,
+    `My interaction with ${(staff) ? staff : apt_template.name} was great because`
   ]);
 
   // Temp badges for staff
@@ -65,7 +64,7 @@ export default function RateReview({ value, setValue, setFeedback, setRoute, apt
     <div>
       <Banner name={apt_template.name} image={apt_template.image} />
       <h1 className='question-text'>
-        Your review for Amulya Parmar:
+        Your review for {(staff) ? staff : apt_template.name}:
       </h1>
       {(isGood) ? (
         <Rate

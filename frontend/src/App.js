@@ -13,8 +13,8 @@ import ProtectedRoutes from './routes/ProtectedRoutes';
 
 
 function App() {
-  const [authIsUpToDate, setAuthIsUpToDate] = useState(true);
-  const [user, setUser] = useState(true);
+  const [authIsUpToDate/*, setAuthIsUpToDate*/] = useState(true);
+  const [user/*, setUser*/] = useState(true);
 
   // useEffect(() => {
   //   firebase.auth.onAuthStateChanged((u) => {
