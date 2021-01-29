@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, redirect, render_template
 from flask_cors import CORS
-from models import db, Lead, User, Apartment, ConstantsModel, initialize_db
+from models import db, Lead, User, Apartment, ConstantsModel, initialize_db, Review
 from util import request_data
 import os
 import json
@@ -305,7 +305,7 @@ def users():
 
     elif request.method == "POST":
             # TODO: Check params
-            body = request.get_json()
+            body = request_data()
             apartment = Apartment.query.get_or_404(body["apartment"])
 
             user = User(name=body["name"], \
@@ -313,7 +313,7 @@ def users():
                         email=body["email"], \
                         role=body["role"], \
                         apartment=apartment)
-    
+
             db.session.add(user)
             db.session.commit()
 
@@ -559,6 +559,70 @@ def viewSMS(sessionSid):
         messagesFile.write("\n")
         messages.append(record.data)
     return (jsonify(messages))
+
+
+@app.route("/resident-review/<int:apartment_id>", methods=["GET"])
+def viewAllReviews(apartment_id):
+    '''View all reviews for an apartment.'''
+    # Make sure user and apartment exist
+    apartment = Apartment.query.get_or_404(apartment_id)
+
+    # Query table to find all reviews that have this apt id
+    data = (
+        db.session.query(Review)
+        .filter(Review.apartment_id == apartment_id)
+        .all()
+    )
+    # Convert all reviews to json in a list
+    reviews = []
+    for datum in data:
+        reviews.append(sqldict(datum))
+    context = { "reviews": reviews }
+
+    return jsonify(**context)
+
+
+@app.route("/resident-review/<int:apartment_id>/<int:user_id>", methods=["GET", "POST"])
+def viewReview(apartment_id, user_id):
+    '''
+        Create new resident review of an apartment or
+        view all reviews for an employee of an apartment.
+    '''
+    # Make sure user and apartment exist
+    apartment = Apartment.query.get_or_404(apartment_id)
+    user = User.query.get_or_404(user_id)
+
+    if request.method == "POST": # TODO: maybe try catch block? for 404 error
+        # Get JSON from request
+        body = request_data()
+
+        # Create new review
+        new_review = Review(\
+            rating=body.get("rating"), \
+            review=body.get("review"), \
+            apartment_id=apartment_id, \
+            user_id=user_id
+        )
+
+        # Put new review into database
+        db.session.add(new_review)
+        db.session.commit()
+
+    # GET request
+    # Query table to find all reviews that have this apt id and this user id
+    data = (
+        db.session.query(Review)
+        .filter(Review.apartment_id == apartment_id)
+        .filter(Review.user_id == user_id)
+        .all()
+    )
+    # Convert all reviews to json in a list
+    reviews = []
+    for datum in data:
+        reviews.append(sqldict(datum))
+    context = { "reviews": reviews }
+
+    return jsonify(**context)
 
 
 if __name__ == "__main__":

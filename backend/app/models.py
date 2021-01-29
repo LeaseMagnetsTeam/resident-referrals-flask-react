@@ -85,6 +85,7 @@ class Apartment(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     aptName = db.Column(db.String(200), default="")
     website = db.Column(db.String(200), default="")
+    reviewLink = db.Column(db.String(200), default="")
     units = db.Column(db.Integer, default=0)
     propertyType = db.Column(db.String(200), default="")
     websiteType = db.Column(db.String(200), default="")
@@ -108,7 +109,7 @@ class User(db.Model):
         return f"<User {self.id}>"
 
 
-class Reviews(db.Model):
+class Review(db.Model):
     '''Table for apartment reviews of staff/maintenance interaction.'''
     __tablename__ = "reviews"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -120,4 +121,4 @@ class Reviews(db.Model):
     user = db.relationship("User")
 
     def __repr__(self):
-        return f"<Reviews {self.id}>"
+        return f"<Review {self.id}>"
