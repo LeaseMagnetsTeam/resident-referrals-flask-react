@@ -322,6 +322,24 @@ def users():
     return jsonify({"response": 405}), 405
 
 
+@app.route("/users/<type>", methods=["GET"])
+def getStaff(type):
+    '''Returns all users whose role is <type>.'''
+    # Query User table and filter for <type> (staff or maintenance)
+    data = (
+        db.session.query(User)
+        .filter(User.role == type)
+        .all()
+    )
+    # Convert all staff to json in a list
+    staff = []
+    for datum in data:
+        staff.append(sqldict(datum))
+    context = { "users": staff }
+
+    return jsonify(**context)
+
+
 """
     Use this route to get or modify a specific user
     GET     /users/{{user_id}} -> Returns a specific user information
@@ -358,7 +376,7 @@ def user(user_id):
         return jsonify({"response": 200}), 200
 
     elif request.method == "PUT":
-        body = request.get_json()
+        body = request_data()
         user = User.query.get_or_404(user_id)
 
         # TODO: Data transfer objects, try and catch
