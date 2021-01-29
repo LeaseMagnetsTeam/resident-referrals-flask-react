@@ -21,7 +21,7 @@ export default function Badges({ badges, selected, setSelected }) {
           return (
             <>
               <input type='checkbox' id={badge.text} onClick={modifySelected} />
-              <label for={badge.text} >
+              <label htmlFor={badge.text} >
                 <h5><span></span> {badge.text}</h5>
               </label>
             </>

@@ -25,10 +25,6 @@ function Answer({ setWho, setRoute, idx, text, nextURL }) {
     setRoute(nextURL);
     // If this question is asking for who the user interacted with
     if (setWho) setWho(text);
-    // if (typeof(setWho) === 'function') {
-    //   console.log("yessir");
-    //   //setWho(text);
-    // }
   }
 
   return (

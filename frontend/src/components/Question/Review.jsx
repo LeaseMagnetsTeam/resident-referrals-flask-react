@@ -28,7 +28,9 @@ export default function RateReview({ staff, value, setValue, setFeedback, setRou
     { text: 'Friendly' },
     { text: 'Helpful' },
     { text: 'Punctual' },
-    { text: 'Resourceful' }
+    { text: 'Resourceful' },
+    { text: 'Rude' },
+    { text: 'Unhelpful' }
   ]);
 
   // Temp badges for apt
