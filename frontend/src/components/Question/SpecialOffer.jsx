@@ -8,7 +8,7 @@ export default function SpecialOffer({ setRoute, apt_template }) {
 
   return (
     <div>
-      <Banner name={apt_template.name} image={apt_template.image} />
+      <Banner name={apt_template.aptName} image={apt_template.image} />
       <div>
         <h1 className='question-text'>
           Would you like to receive special offers?

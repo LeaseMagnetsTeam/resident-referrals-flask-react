@@ -16,11 +16,11 @@ export default function RateReview({ staff, value, setValue, setFeedback, setRou
 
   // Preset responses based on the rating the user picks
   const [presets] = useState([
-    `My interaction with ${(staff) ? staff : apt_template.name} was terrible because`,
-    `My interaction with ${(staff) ? staff : apt_template.name} was poor because`,
-    `My interaction with ${(staff) ? staff : apt_template.name} was okay because`,
-    `My interaction with ${(staff) ? staff : apt_template.name} was good because`,
-    `My interaction with ${(staff) ? staff : apt_template.name} was great because`
+    `My interaction with ${(staff) ? staff : apt_template.aptName} was terrible because`,
+    `My interaction with ${(staff) ? staff : apt_template.aptName} was poor because`,
+    `My interaction with ${(staff) ? staff : apt_template.aptName} was okay because`,
+    `My interaction with ${(staff) ? staff : apt_template.aptName} was good because`,
+    `My interaction with ${(staff) ? staff : apt_template.aptName} was great because`
   ]);
 
   // Temp badges for staff
@@ -49,7 +49,7 @@ export default function RateReview({ staff, value, setValue, setFeedback, setRou
     }
     // Else, prompt user with Google review
     else {
-      setRoute(apt_template.review_link);
+      setRoute(apt_template.reviewLink);
     }
   }
 
@@ -64,9 +64,9 @@ export default function RateReview({ staff, value, setValue, setFeedback, setRou
 
   return (
     <div>
-      <Banner name={apt_template.name} image={apt_template.image} />
+      <Banner name={apt_template.aptName} image={apt_template.image} />
       <h1 className='question-text'>
-        Your review for {(staff) ? staff : apt_template.name}:
+        Your review for {(staff) ? staff : apt_template.aptName}:
       </h1>
       {(isGood) ? (
         <Rate

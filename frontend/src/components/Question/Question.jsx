@@ -5,13 +5,21 @@ import './question.css';
 export default function Question({ setRoute, apt_template, question_template, setWho }) {
   return (
     <div>
-      <Banner name={apt_template.name} image={apt_template.image} />
+      <Banner name={apt_template.aptName} image={apt_template.image} />
       <h1 className='question-text'>
         {question_template.question}
       </h1>
       {question_template.answers.map((answer, idx) => {
         return (
-          <Answer setWho={setWho} setRoute={setRoute} idx={idx} text={answer.text} nextURL={answer.nextURL} />
+          <Answer
+            key={answer.id}
+            id={answer.id}
+            setWho={setWho}
+            setRoute={setRoute}
+            idx={idx}
+            text={answer.text}
+            nextURL={answer.nextURL}
+          />
         );
       })}
     </div>
@@ -19,12 +27,12 @@ export default function Question({ setRoute, apt_template, question_template, se
 }
 
 // Answer button
-function Answer({ setWho, setRoute, idx, text, nextURL }) {
+function Answer({ id, setWho, setRoute, idx, text, nextURL }) {
   // Handle button click
   function handleClick() {
     setRoute(nextURL);
     // If this question is asking for who the user interacted with
-    if (setWho) setWho(text);
+    if (setWho) setWho({name: text, user_id: id});
   }
 
   return (
