@@ -322,12 +322,13 @@ def users():
     return jsonify({"response": 405}), 405
 
 
-@app.route("/users/<type>", methods=["GET"])
-def getStaff(type):
-    '''Returns all users whose role is <type>.'''
+@app.route("/users/<int:apartment_id>/<type>", methods=["GET"])
+def getStaff(apartment_id, type):
+    '''Returns all users at apartment_id whose role is <type>.'''
     # Query User table and filter for <type> (staff or maintenance)
     data = (
         db.session.query(User)
+        .filter(User.apartment_id == apartment_id)
         .filter(User.role == type)
         .all()
     )
@@ -435,7 +436,8 @@ def apartment():
             website=body["website"], \
             units=body["units"], \
             propertyType=body["propertyType"], \
-            websiteType=body["websiteType"])
+            websiteType=body["websiteType"], \
+            reviewLink=body["reviewLink"])
 
         db.session.add(apartment)
         db.session.commit()
@@ -579,7 +581,7 @@ def viewSMS(sessionSid):
     return (jsonify(messages))
 
 
-@app.route("/resident-review/<int:apartment_id>", methods=["GET"])
+@app.route("/resident-review/<int:apartment_id>", methods=["GET", "POST"])
 def viewAllReviews(apartment_id):
     '''View all reviews for an apartment.'''
     # Make sure user and apartment exist
