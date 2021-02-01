@@ -7,7 +7,7 @@ export default function Navbar() {
 
   return (
     <div className='navbar' onClick={openLandingPage}>
-      <span className='white'>RESIDENTS.
+      <span className='dark-grey'>RESIDENTS.
       <span className='light-grey'>ME</span></span>
     </div>
   );

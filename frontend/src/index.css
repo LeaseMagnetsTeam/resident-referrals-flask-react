@@ -15,6 +15,10 @@ button:hover {
   color: white;
 }
 
+.dark-grey {
+  color: #404041;
+}
+
 .light-grey {
   color: #605d5d;
 }
