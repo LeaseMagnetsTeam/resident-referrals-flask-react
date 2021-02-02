@@ -1,0 +1,43 @@
+.admin-container {
+  margin: 10px 5% 0% 5%;
+}
+
+.admin-container h1 {
+  color: black;
+}
+
+.admin-container input[type='search'] {
+  border: none;
+  border-radius: 4px;
+  width: 100%;
+  background-color: #EFEFEF;
+  height: 50px;
+  font-size: 24px;
+}
+
+.admin-card-container {
+  margin-left: 1%;
+}
+
+.admin-container-card {
+  display: inline-block;
+  text-align: center;
+  border-radius: 8px;
+  margin: 10px 3px 0px 3px;
+  color: white;
+  height: 150px;
+  width: 49%;
+}
+
+@media only screen and (max-width: 600px) {
+  .admin-card-container {
+    margin: 0;
+  }
+  .admin-container-card {
+    width: 98%;
+  }
+}
+.admin-container-card h2 {
+  font-size: 40px;
+  margin-top: 55px;
+}

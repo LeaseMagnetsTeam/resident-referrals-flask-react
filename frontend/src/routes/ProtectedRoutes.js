@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Switch, Route } from 'react-router-dom';
 
 // import { SignUp, SignIn, ResetPassword } from '../components/Auth';
-import { Navbar } from "../components/Navbar"
+import { Navbar } from "../components/Navbar";
+import { Home, Login } from "../components/Dashboard";
 import { Question, Exit, SpecialOffer, Review } from '../components/Question';
 
 // Testing backend without backend server
@@ -122,74 +124,84 @@ const ProtectedRoutes = () => {
   return (
     <>
       <Navbar />
-      {(route === '/' && aptTemplate) &&
-        <Question
-          setRoute={handleRouteUpdate}
-          apt_template={aptTemplate}
-          question_template={question_template}
-        />
-      }
-      {(route === '/toured-community' && aptTemplate && staffTemplate) &&
-        <Question
-          setWho={setWho}
-          setRoute={handleRouteUpdate}
-          apt_template={aptTemplate}
-          question_template={staffTemplate}
-        />
-      }
-      {(route === '/maintenance-completed' && aptTemplate && maintenanceTemplate) &&
-        <Question
-          setWho={setWho}
-          setRoute={handleRouteUpdate}
-          apt_template={aptTemplate}
-          question_template={maintenanceTemplate}
-        />
-      }
-      {(route === '/signed-lease' && aptTemplate && leasedTemplate) &&
-        <Question
-          setWho={setWho}
-          setRoute={handleRouteUpdate}
-          apt_template={aptTemplate}
-          question_template={leasedTemplate}
-        />
-      }
-      {(route === '/ask-review' && aptTemplate) &&
-        <Question
-          setRoute={handleRouteUpdate}
-          apt_template={aptTemplate}
-          question_template={question_template1}
-        />
-      }
-      {(route === '/give-review' && aptTemplate) &&
-        <Review
-          staff={who.name}
-          setRoute={handleRouteUpdate}
-          setFeedback={setFeedback}
-          value={rating}
-          setValue={setRating}
-          apt_template={aptTemplate}
-          selectedStaffBadges={selectedStaffBadges}
-          selectedAptBadges={selectedAptBadges}
-          setSelectedStaffBadges={setSelectedStaffBadges}
-          setSelectedAptBadges={setSelectedAptBadges}
-        />
-      }
-      {(route === '/special-offer' && aptTemplate) &&
-        <SpecialOffer
-          setRoute={handleRouteUpdate}
-          apt_template={aptTemplate}
-        />
-      }
-      {(route === '/exit-page' && aptTemplate) &&
-        <Exit
-          who={who}
-          apt_template={aptTemplate}
-          rating={rating}
-          feedback={feedback}
-          selectedStaffBadges={selectedStaffBadges}
-          selectedAptBadges={selectedAptBadges}
-        />
-      }
+      <Switch>
+        <Route path="/" exact>
+          <Home />
+        </Route>
+        <Route path="/login" exact>
+          <Login />
+        </Route>
+        <Route path="/test-survey" exact>
+          {(route === '/' && aptTemplate) &&
+            <Question
+              setRoute={handleRouteUpdate}
+              apt_template={aptTemplate}
+              question_template={question_template}
+            />
+          }
+          {(route === '/toured-community' && aptTemplate && staffTemplate) &&
+            <Question
+              setWho={setWho}
+              setRoute={handleRouteUpdate}
+              apt_template={aptTemplate}
+              question_template={staffTemplate}
+            />
+          }
+          {(route === '/maintenance-completed' && aptTemplate && maintenanceTemplate) &&
+            <Question
+              setWho={setWho}
+              setRoute={handleRouteUpdate}
+              apt_template={aptTemplate}
+              question_template={maintenanceTemplate}
+            />
+          }
+          {(route === '/signed-lease' && aptTemplate && leasedTemplate) &&
+            <Question
+              setWho={setWho}
+              setRoute={handleRouteUpdate}
+              apt_template={aptTemplate}
+              question_template={leasedTemplate}
+            />
+          }
+          {(route === '/ask-review' && aptTemplate) &&
+            <Question
+              setRoute={handleRouteUpdate}
+              apt_template={aptTemplate}
+              question_template={question_template1}
+            />
+          }
+          {(route === '/give-review' && aptTemplate) &&
+            <Review
+              staff={who.name}
+              setRoute={handleRouteUpdate}
+              setFeedback={setFeedback}
+              value={rating}
+              setValue={setRating}
+              apt_template={aptTemplate}
+              selectedStaffBadges={selectedStaffBadges}
+              selectedAptBadges={selectedAptBadges}
+              setSelectedStaffBadges={setSelectedStaffBadges}
+              setSelectedAptBadges={setSelectedAptBadges}
+            />
+          }
+          {(route === '/special-offer' && aptTemplate) &&
+            <SpecialOffer
+              setRoute={handleRouteUpdate}
+              apt_template={aptTemplate}
+            />
+          }
+          {(route === '/exit-page' && aptTemplate) &&
+            <Exit
+              who={who}
+              apt_template={aptTemplate}
+              rating={rating}
+              feedback={feedback}
+              selectedStaffBadges={selectedStaffBadges}
+              selectedAptBadges={selectedAptBadges}
+            />
+          }
+        </Route>
+      </Switch>
     </>
   );
 };
