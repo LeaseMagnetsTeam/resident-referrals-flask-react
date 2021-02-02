@@ -1,11 +1,20 @@
 .navbar {
   background-color: white;
-  font-size: 24px;
+  font-size: 36px;
   width: 100vw;
-  height: 70px;
+  height: 76px;
 }
 
 .navbar .dark-grey {
   font-weight: 600;
   letter-spacing: -2px;
+}
+
+.navbar-flex {
+  display: flex;
+}
+
+.navbar-flex span {
+  margin: 0px 3px 0px 4px;
+  line-height: 43px;
 }

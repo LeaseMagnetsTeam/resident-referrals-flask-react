@@ -44,7 +44,7 @@ function OfferForm({ setRoute }) {
   // Track of errors/missing inputs
   const [error, setError] = useState('');
 
-  // TODO: this function handles form submit
+  // Validate form inputs & subscribe user to SMS/email notifications
   function handleFormSubmit(event) {
     event.preventDefault();
     // Error handling
