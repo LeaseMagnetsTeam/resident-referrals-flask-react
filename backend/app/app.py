@@ -37,12 +37,19 @@ def hello_world():
     return "hello world"
 
 
-@app.route("/init_db")
+@app.route("/init_db", methods=["GET", "POST"])
 def init_db():
     if app.config["DEBUG"]:
         db.drop_all()
         db.create_all()
     return "initialized db"
+
+
+@app.route("/delete_db", methods=["GET", "POST"])
+def delete_db():
+    if app.config["DEBUG"]:
+        db.drop_all()
+    return "deleted db"
 
 
 @app.route("/followups", methods=["GET", "POST"])
@@ -433,6 +440,7 @@ def apartment():
         # TODO: Check params
         apartment = Apartment(\
             aptName=body["aptName"], \
+            aptBadges=json.loads(body["aptBadges"]), \
             website=body["website"], \
             units=body["units"], \
             propertyType=body["propertyType"], \

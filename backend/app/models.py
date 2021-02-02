@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from collections import namedtuple
+# from sqlalchemy import JSON
 
 db = SQLAlchemy()
 
@@ -84,6 +85,7 @@ class Apartment(db.Model):
     __tablename__ = "apartments"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     aptName = db.Column(db.String(200), default="")
+    aptBadges = db.Column(db.JSON, nullable=False)
     website = db.Column(db.String(200), default="")
     reviewLink = db.Column(db.String(200), default="")
     units = db.Column(db.Integer, default=0)
@@ -101,7 +103,7 @@ class User(db.Model):
     phoneNumber = db.Column(db.String(50), default="")
     email = db.Column(db.String(200), default="")
     role = db.Column(db.String(50), default="")
-    apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
+    apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id, ondelete='CASCADE'))
 
     apartment = db.relationship("Apartment")
 
@@ -115,8 +117,9 @@ class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     rating = db.Column(db.Float, default=4.0)
     review = db.Column(db.String(500), default="")
-    apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    aptBadges = db.Column(db.JSON, nullable=False)
+    apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id, ondelete='CASCADE'))
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id, ondelete='CASCADE'))
     apartment = db.relationship("Apartment")
     user = db.relationship("User")
 
