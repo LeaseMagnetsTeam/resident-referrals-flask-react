@@ -3,6 +3,8 @@
   font-size: 36px;
   width: 100vw;
   height: 76px;
+  border-bottom: 3px solid #efefef;
+  padding-left: 5%;
 }
 
 .navbar .dark-grey {
