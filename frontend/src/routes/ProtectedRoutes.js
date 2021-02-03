@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
 // import { SignUp, SignIn, ResetPassword } from '../components/Auth';
 import { Navbar } from "../components/Navbar";
-import { Home, Login } from "../components/Dashboard";
+import { Home, Login, Dashboard } from "../components/Dashboard";
 import { Question, Exit, SpecialOffer, Review } from '../components/Question';
 
 // Testing backend without backend server
@@ -128,8 +128,11 @@ const ProtectedRoutes = () => {
         <Route path="/" exact>
           <Home />
         </Route>
-        <Route path="/login" exact>
+        <Route path="/login/:aptName">
           <Login />
+        </Route>
+        <Route path="/portal/:aptName">
+          <Dashboard />
         </Route>
         <Route path="/test-survey" exact>
           {(route === '/' && aptTemplate) &&
@@ -201,6 +204,7 @@ const ProtectedRoutes = () => {
             />
           }
         </Route>
+        <Redirect from='*' to='/' />
       </Switch>
     </>
   );

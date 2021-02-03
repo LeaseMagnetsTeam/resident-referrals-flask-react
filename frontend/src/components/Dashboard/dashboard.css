@@ -13,6 +13,7 @@
   background-color: #EFEFEF;
   height: 50px;
   font-size: 24px;
+  margin: 3px 0px 8px 0px;
 }
 
 .admin-card-container {
@@ -23,21 +24,66 @@
   display: inline-block;
   text-align: center;
   border-radius: 8px;
-  margin: 10px 3px 0px 3px;
+  margin: 4px 3px 0px 3px;
   color: white;
   height: 150px;
   width: 49%;
+  overflow-x: scroll;
+}
+
+.admin-container-card:hover {
+  opacity: 0.7;
+}
+
+.admin-container-card h2 {
+  font-size: 40px;
+  margin-top: 55px;
+}
+
+.admin-login-container {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.admin-login-container h1 {
+  color: black;
+  font-size: 40px;
+}
+
+.admin-login-container input[type='password'] {
+  width: 40vw;
+  height: 40px;
+  margin-bottom: 24px;
+  border: none;
+  border-radius: 6px;
+  background-color: #efefef;
+}
+
+.admin-login-container button {
+  width: 20vw;
+  height: 50px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  background-color: #3175B1;
+  font-size: 26px;
+  font-weight: 600;
 }
 
 @media only screen and (max-width: 600px) {
   .admin-card-container {
     margin: 0;
   }
+
   .admin-container-card {
     width: 98%;
   }
-}
-.admin-container-card h2 {
-  font-size: 40px;
-  margin-top: 55px;
+
+  .admin-login-container input[type='password'] {
+    width: 80vw;
+  }
+
+  .admin-login-container button {
+    width: 60vw;
+  }
 }
