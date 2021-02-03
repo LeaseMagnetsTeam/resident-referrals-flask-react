@@ -23,7 +23,11 @@ export default function Exit({ who, apt_template, question_template, rating, fee
       apartment_id: apt_template.id,
       user_id: parseInt(user_id),
       rating: parseInt(rating),
-      review: ((who && feedback.length <= 41 + who.name.length) ? '' : feedback)
+      review: ((who && feedback.length <= 41 + who.name.length) ? '' : feedback),
+      badges: {
+                apt: selectedAptBadges,
+                staff: selectedStaffBadges
+              }
     }
     // POST review to backend
     fetch(`http://localhost:8080/resident-review/${apt_template.id}/${user_id}`, {
