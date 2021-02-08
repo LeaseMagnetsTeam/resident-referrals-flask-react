@@ -136,6 +136,59 @@
   display: block;
 }
 
+.dashboard-staff-form {
+  padding: 25px;
+  background-color: inherit;
+}
+
+.dashboard-staff-form h3 {
+  color: #3175B1;
+}
+
+.dashboard-staff-form input[type='text'], .dashboard-staff-form input[type='email'] {
+  height: 40px;
+  width: 100%;
+  border: none;
+  border-radius: 4px;
+  background-color: #efefef;
+  margin-bottom: 5px;
+}
+
+.dashboard-staff-form input[type='submit'], .dashboard-staff-form input[type='reset'] {
+  border: none;
+  border-radius: 4px;
+  background-color: white;
+  padding: 8px 20px 8px 20px;
+  margin: 3px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.dashboard-staff-form input[type='submit'] {
+  color: #3175B1;
+  border: 1px solid #3175B1;
+}
+
+.dashboard-staff-form input[type='submit']:hover {
+  background-color: #3175B1;
+  color: white;
+}
+
+.dashboard-staff-form input[type='reset'] {
+  color: red;
+  border: 1px solid red;
+}
+
+.dashboard-staff-form input[type='reset']:hover {
+  background-color: red;
+  color: white;
+}
+
+.dashboard-apt-container {
+  height: 280px;
+  width: 44vw;
+}
+
 .dashboard-apt-container .MuiRating-sizeLarge {
   font-size: 3rem;
 }
@@ -152,6 +205,19 @@
 
 .dashboard-apt-container .inline-block p {
   color: #393939;
+}
+
+.dashboard-qrcode-container {
+  height: 280px;
+  width: 45vw;
+}
+
+.dashboard-qrcode-container .float-left {
+  padding-left: 60px;
+}
+
+.dashboard-qrcode-container .float-right {
+  padding: 50px 100px 0px 0px;
 }
 
 .dashboard-qrcode-container button {
@@ -173,6 +239,20 @@
 .dashboard-qrcode-container .btn-fill {
   border: 2px solid #3175B1;
   background-color: #3175B1;
+}
+
+.dashboard-badge {
+  display: inline-block;
+  background-color: #f0f5f9;
+  color: #3175B1;
+  /* border: 1px solid #3175B1; */
+  border-radius: 50px;
+  padding: 7px 15px 7px 15px;
+  margin: 0px 5px 8px 5px;
+}
+
+.dashboard-badge-container {
+  margin-bottom: 13px;
 }
 
 @media only screen and (max-width: 600px) {

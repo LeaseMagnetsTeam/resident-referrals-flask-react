@@ -40,3 +40,7 @@ button:hover {
 .float-right {
   float: right;
 }
+
+.inline-block {
+  display: inline-block;
+}

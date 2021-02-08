@@ -1,13 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import QRCode from "react-qr-code";
 
+// Material-UI Imports
+import Popover from '@material-ui/core/Popover';
+
 export default function QRcode({ link }) {
+  // Popup true or false
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
   // Copy link to clipboard
-  function copyLink() {
+  function copyLink(event) {
+    setAnchorEl(event.currentTarget);
     navigator.clipboard.writeText(link)
       .then(() => {
         console.log(`Copied ${link}`);
-        alert('Copied to clipboard');
+        // alert('Copied to clipboard');
+
       })
       .catch((error) => {
         console.log(error.message);
@@ -32,16 +42,33 @@ export default function QRcode({ link }) {
   return (
     <div className='dashboard-qrcode-container'>
       <h1>Survey Link</h1>
-      <div className='inline-block center'>
+      <div className='float-left'>
         <QRCode value={link} size={190} />
       </div>
-      <div className='inline-block center'>
+      <div className='float-right'>
         <button
+          id="copy-btn"
           className='btn-outline'
           onClick={copyLink}
         >
           Copy link
         </button>
+        <Popover
+          id="copy-btn"
+          open={open}
+          anchorEl={anchorEl}
+          onClose={() => { setAnchorEl(null); }}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+        >
+          Copied to clipboard
+        </Popover>
         <br />
         <button
           className='btn-fill'

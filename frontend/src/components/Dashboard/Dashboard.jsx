@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import QRCode from './QRCode';
 import AptFeedback from './AptFeedback';
 import StaffFeedback from './StaffFeedback';
+import Badge from './Badge';
 
 // Material UI Imports
 import AppBar from '@material-ui/core/AppBar';
@@ -67,22 +68,29 @@ export default function Dashboard() {
     <div className='dashboard-container'>
       <h1>The George Admin Portal</h1>
 
-      <div className='inline-block'>
+      <div className='float-left'>
         <QRCode link={'https://leasemagnets.com'} />
       </div>
 
-      <div className='inline-block'>
+      <div className='float-right'>
         <AptFeedback />
       </div>
 
       <div>
         <h1>Staff Feedback</h1>
+
+        <div className='dashboard-badge-container'>
+          <Badge number={10} text={"friendly"} />
+          <Badge number={90} text={"rude"} />
+        </div>
+
         <AppBar position="static">
           <Tabs value={tab} onChange={handleTabChange} aria-label="simple tabs example">
             <Tab label="Leasing Staff" {...a11yProps(0)} />
             <Tab label="Maintenance Staff" {...a11yProps(1)} />
           </Tabs>
         </AppBar>
+
         <TabPanel value={tab} index={0}>
           <StaffFeedback employees={staff} aptName={"The George"} />
         </TabPanel>

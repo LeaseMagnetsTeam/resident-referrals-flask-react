@@ -1,9 +1,9 @@
 import React from 'react';
 
-export default function Badge() {
+export default function Badge({ number, text }) {
   return (
-    <div>
-      Badge
+    <div className='center dashboard-badge'>
+      <strong>{number} {text}</strong>
     </div>
   )
 }
