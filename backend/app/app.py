@@ -470,6 +470,23 @@ def apartment():
     return jsonify({"response": 405}), 405
 
 
+@app.route("/apartments/<apt_slug>", methods=["GET"])
+def getApartmentByName(apt_slug):
+    '''Returns apartment json via search by name.'''
+    # apt_slug will be the apt name in all lower case
+    # connected by '-'
+    aptName = apt_slug.replace("-", " ").title()
+
+    # Query by aptName
+    data = (
+        db.session.query(Apartment)
+        .filter(Apartment.aptName == aptName)
+        .one()
+    )
+
+    return jsonify(sqldict(data))
+
+
 """
     Use this route to modify a specific apartment(community)
     GET     /apartments/{{apartment_id}} -> returns a specific apartment information
