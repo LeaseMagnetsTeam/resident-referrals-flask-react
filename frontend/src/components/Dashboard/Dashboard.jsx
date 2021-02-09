@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import QRCode from './QRCode';
 import AptFeedback from './AptFeedback';
 import StaffFeedback from './StaffFeedback';
@@ -13,9 +13,10 @@ import Box from '@material-ui/core/Box';
 
 import './dashboard.css';
 
-export default function Dashboard() {
+export default function Dashboard({ getApartment, getSlug }) {
+  const [apt, setApt] = useState();
   // TODO: Get leasing staff from backend
-  const [staff] = useState([
+  const [staff, setStaff] = useState([
     {
       id: 1,
       name: "Amulya Parmar"
@@ -41,7 +42,7 @@ export default function Dashboard() {
       name: "Jonathan Chuang"
     },
   ]);
-  const [maintenance] = useState([
+  const [maintenance, setMaintenance] = useState([
     {
       id: 4,
       name: "Jonathan Chuang"
@@ -56,6 +57,24 @@ export default function Dashboard() {
     },
   ]);
 
+  // Get leasing/maintenance staff
+  // setState = setter function
+  // slug = aptName slug
+  // staff = "Staff" or "Maintenance"
+  function getStaff(setState, slug, staff) {
+    fetch(`http://localhost:8080/users/${slug}/${staff}`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setState(data.users);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      })
+  }
+
+  // TODO: GET reviews
 
   // Which tab user is on
   const [tab, setTab] = useState(0);
@@ -64,12 +83,20 @@ export default function Dashboard() {
     setTab(newValue);
   };
 
+  useEffect(() => {
+    getApartment(setApt, getSlug());
+    getStaff(setStaff, getSlug(), "Staff");
+    getStaff(setMaintenance, getSlug(), "Maintenance");
+  }, []);
+
   return (
+    <>
+    {(apt) &&
     <div className='dashboard-container'>
-      <h1>The George Admin Portal</h1>
+      <h1>{apt.aptName} Admin Portal</h1>
 
       <div className='float-left'>
-        <QRCode link={'https://leasemagnets.com'} />
+        <QRCode link={`http://localhost:3000/survey/${getSlug()}`} />
       </div>
 
       <div className='float-right'>
@@ -94,19 +121,20 @@ export default function Dashboard() {
         <TabPanel value={tab} index={0}>
           <StaffFeedback
             employees={staff}
-            aptName={"The George"}
+            aptName={apt.aptName}
             route={"Staff"}
           />
         </TabPanel>
         <TabPanel value={tab} index={1}>
           <StaffFeedback
             employees={maintenance}
-            aptName={"The George"}
+            aptName={apt.aptName}
             route={"Maintenance"}
           />
         </TabPanel>
       </div>
-    </div>
+    </div>}
+    </>
   );
 }
 

@@ -83,16 +83,22 @@ export default function StaffFeedback({ aptName, employees, route }) {
       </div>
       <br />
       <br />
-      <div className='employees'>
-        {employees.map((employee) => {
-          return (
-            <Employee
-              key={employee.id}
-              name={employee.name}
-            />
-          );
-        })}
-      </div>
+      {(employees.length > 0) ?
+        <div className='employees'>
+          {employees.map((employee) => {
+            return (
+              <Employee
+                key={employee.id}
+                name={employee.name}
+              />
+            );
+          })}
+        </div>
+        :
+        <div className='no-employees center-div'>
+          No employees found
+        </div>
+      }
     </div>
   );
 }

@@ -136,6 +136,11 @@
   display: block;
 }
 
+.dashboard-staff-container .no-employees {
+  font-size: 40px;
+  height: 200px;
+}
+
 .dashboard-staff-form {
   padding: 25px;
   background-color: inherit;

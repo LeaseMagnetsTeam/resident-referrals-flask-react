@@ -344,13 +344,20 @@ def users():
 
     return jsonify({"response": 405}), 405
 
-@app.route("/users/<int:apartment_id>/<type>", methods=["GET"])
-def getStaff(apartment_id, type):
+@app.route("/users/<apt_slug>/<type>", methods=["GET"])
+def getStaff(apt_slug, type):
     '''Returns all users at apartment_id whose role is <type>.'''
-    # Query User table and filter for <type> (staff or maintenance)
+    # aptName will be a slug so need to convert to name first
+    aptName = apt_slug.replace("-", " ").title()
+    apt = (
+        db.session.query(Apartment)
+        .filter(Apartment.aptName == aptName)
+        .one()
+    )
+    # Query User table and filter for apt <type> (staff or maintenance)
     data = (
         db.session.query(User)
-        .filter(User.apartment_id == apartment_id)
+        .filter(User.apartment == apt)
         .filter(User.role == type)
         .all()
     )
@@ -484,7 +491,7 @@ def getApartmentByName(apt_slug):
         .one()
     )
 
-    return jsonify(sqldict(data))
+    return jsonify(apartment=sqldict(data)), 201
 
 
 """
