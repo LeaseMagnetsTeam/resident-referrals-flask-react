@@ -313,13 +313,29 @@ def users():
     elif request.method == "POST":
             # TODO: Check params
             body = request_data()
-            apartment = Apartment.query.get_or_404(body["apartment"])
 
-            user = User(name=body["name"], \
-                        phoneNumber=body["phoneNumber"], \
-                        email=body["email"], \
-                        role=body["role"], \
-                        apartment=apartment)
+            # If apartment is given as an string (name of apt)
+            if type(body["apartment"]) == type(body["name"]):
+                data = (
+                    db.session.query(Apartment)
+                    .filter(Apartment.aptName == body["apartment"])
+                    .one()
+                )
+
+                user = User(name=body["name"], \
+                            phoneNumber=body["phoneNumber"], \
+                            email=body["email"], \
+                            role=body["role"], \
+                            apartment=data)
+            # If apartment is given as an integer (apt id)
+            else:
+                apartment = Apartment.query.get_or_404(body["apartment"])
+
+                user = User(name=body["name"], \
+                            phoneNumber=body["phoneNumber"], \
+                            email=body["email"], \
+                            role=body["role"], \
+                            apartment=apartment)
 
             db.session.add(user)
             db.session.commit()
@@ -327,7 +343,6 @@ def users():
             return jsonify(user=sqldict(user)), 201
 
     return jsonify({"response": 405}), 405
-
 
 @app.route("/users/<int:apartment_id>/<type>", methods=["GET"])
 def getStaff(apartment_id, type):

@@ -13,6 +13,37 @@ export default function StaffFeedback({ aptName, employees, route }) {
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
+  // Create new employee
+  function createEmployee(name, phone, email) {
+    const data = {
+      name: name,
+      phoneNumber: phone,
+      email: email,
+      role: route,
+      apartment: aptName
+    }
+
+    // POST User to backend
+    fetch(`http://localhost:8080/users`, {
+      method: 'POST',
+      headers: {
+      'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        // Refresh page to get updated list of employees
+        window.location.reload(false);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      })
+  }
+
   return (
     <div className="dashboard-staff-container">
       <div className='float-left'>
@@ -44,7 +75,10 @@ export default function StaffFeedback({ aptName, employees, route }) {
             horizontal: 'right',
           }}
         >
-          <Form setAnchorEl={setAnchorEl} />
+          <Form
+            setAnchorEl={setAnchorEl}
+            createEmployee={createEmployee}
+          />
         </Popover>
       </div>
       <br />
@@ -52,7 +86,10 @@ export default function StaffFeedback({ aptName, employees, route }) {
       <div className='employees'>
         {employees.map((employee) => {
           return (
-            <Employee key={employee.id} name={employee.name} />
+            <Employee
+              key={employee.id}
+              name={employee.name}
+            />
           );
         })}
       </div>
@@ -79,12 +116,19 @@ function Employee({ name }) {
 }
 
 // Form to add new employee
-function Form({ setAnchorEl }) {
+function Form({ setAnchorEl, createEmployee }) {
+  // Form states
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+
   // Validate form & make POST request to create new employee
-  function handleFormSubmit() {
+  function handleFormSubmit(event) {
+    event.preventDefault();
     // TODO: Validate form
-    // Refresh page to get updated list of employees
-    window.location.reload(false);
+
+    // POST to Users route
+    createEmployee(name, phone, email);
   }
 
   function handleFormCancel() {
@@ -95,9 +139,24 @@ function Form({ setAnchorEl }) {
     <div className='center dashboard-staff-form'>
       <h3>Create employee</h3>
       <form onSubmit={handleFormSubmit} onReset={handleFormCancel}>
-        <input type='text' placeholder=' Full name' /><br />
-        <input type='text' placeholder=' Phone number' /><br />
-        <input type='email' placeholder=' Email address' /><br />
+        <input
+          type='text'
+          placeholder=' Full name'
+          onChange={(e) => setName(e.target.value)}
+        />
+        <br />
+        <input
+          type='text'
+          placeholder=' Phone number'
+          onChange={(e) => setPhone(e.target.value)}
+        />
+        <br />
+        <input
+          type='email'
+          placeholder=' Email address'
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <br />
         <input type='submit' value='Submit' />
         <input type='reset' value='Cancel' />
       </form>

@@ -92,10 +92,18 @@ export default function Dashboard() {
         </AppBar>
 
         <TabPanel value={tab} index={0}>
-          <StaffFeedback employees={staff} aptName={"The George"} />
+          <StaffFeedback
+            employees={staff}
+            aptName={"The George"}
+            route={"Staff"}
+          />
         </TabPanel>
         <TabPanel value={tab} index={1}>
-          <StaffFeedback employees={maintenance} aptName={"The George"} />
+          <StaffFeedback
+            employees={maintenance}
+            aptName={"The George"}
+            route={"Maintenance"}
+          />
         </TabPanel>
       </div>
     </div>
