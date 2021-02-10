@@ -8,7 +8,7 @@ export default function SpecialOffer({ setRoute, apt_template }) {
 
   return (
     <div>
-      <Banner name={apt_template.aptName} image={apt_template.image} />
+      <Banner name={apt_template.aptName} image={"https://advancelocal-adapter-image-uploads.s3.amazonaws.com/image.nj.com/home/njo-media/width2048/img/entertainment_impact/photo/csm1016-oceanave-s010-ext-hero-dusk-final2000jpg-d3e3b1df09bff4be.jpg"} />
       <div>
         <h1 className='question-text'>
           Would you like to receive special offers?

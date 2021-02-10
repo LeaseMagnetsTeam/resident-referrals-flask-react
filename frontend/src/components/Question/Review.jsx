@@ -64,7 +64,7 @@ export default function RateReview({ staff, value, setValue, setFeedback, setRou
 
   return (
     <div>
-      <Banner name={apt_template.aptName} image={apt_template.image} />
+      <Banner name={apt_template.aptName} image={"https://advancelocal-adapter-image-uploads.s3.amazonaws.com/image.nj.com/home/njo-media/width2048/img/entertainment_impact/photo/csm1016-oceanave-s010-ext-hero-dusk-final2000jpg-d3e3b1df09bff4be.jpg"} />
       <h1 className='question-text'>
         Your review for {(staff) ? staff : apt_template.aptName}:
       </h1>

@@ -50,7 +50,7 @@ export default function Exit({ who, apt_template, question_template, rating, fee
 
   return (
     <div>
-      <Banner name={apt_template.aptName} image={apt_template.image} />
+      <Banner name={apt_template.aptName} image={"https://advancelocal-adapter-image-uploads.s3.amazonaws.com/image.nj.com/home/njo-media/width2048/img/entertainment_impact/photo/csm1016-oceanave-s010-ext-hero-dusk-final2000jpg-d3e3b1df09bff4be.jpg"} />
       <h1 className='exit-text'>
         Thank you for your response. <br /> We look forward to
         making {apt_template.aptName} a better place!
