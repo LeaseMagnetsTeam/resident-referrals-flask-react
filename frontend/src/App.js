@@ -63,7 +63,6 @@ function App() {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         setApartments(data.apartments);
       })
       .catch((error) => {

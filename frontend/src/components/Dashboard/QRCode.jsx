@@ -8,7 +8,7 @@ export default function QRcode({ link }) {
   // Popup true or false
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id = open ? 'copy-btn' : undefined;
 
   // Copy link to clipboard
   function copyLink(event) {
@@ -47,14 +47,14 @@ export default function QRcode({ link }) {
       </div>
       <div className='float-right'>
         <button
-          id="copy-btn"
+          id={id}
           className='btn-outline'
           onClick={copyLink}
         >
           Copy link
         </button>
         <Popover
-          id="copy-btn"
+          id={id}
           open={open}
           anchorEl={anchorEl}
           onClose={() => { setAnchorEl(null); }}

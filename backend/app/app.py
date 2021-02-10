@@ -628,7 +628,7 @@ def viewSMS(sessionSid):
     return (jsonify(messages))
 
 
-@app.route("/resident-review/<int:apartment_id>", methods=["GET", "POST"])
+@app.route("/reviews/<int:apartment_id>", methods=["GET", "POST"])
 def viewAllReviews(apartment_id):
     '''View all reviews for an apartment.'''
     # Make sure user and apartment exist
@@ -649,7 +649,7 @@ def viewAllReviews(apartment_id):
     return jsonify(**context)
 
 
-@app.route("/resident-review/<int:apartment_id>/<int:user_id>", methods=["GET", "POST"])
+@app.route("/reviews/<int:apartment_id>/<int:user_id>", methods=["GET", "POST"])
 def viewReview(apartment_id, user_id):
     '''
         Create new resident review of an apartment or
@@ -667,6 +667,7 @@ def viewReview(apartment_id, user_id):
         new_review = Review(\
             rating=body.get("rating"), \
             review=body.get("review"), \
+            aptBadges=body.get("badges"), \
             apartment_id=apartment_id, \
             user_id=user_id
         )

@@ -30,7 +30,7 @@ export default function Exit({ who, apt_template, question_template, rating, fee
               }
     }
     // POST review to backend
-    fetch(`http://localhost:8080/resident-review/${apt_template.id}/${user_id}`, {
+    fetch(`http://localhost:8080/reviews/${apt_template.id}/${user_id}`, {
       method: 'POST',
       headers: {
       'Content-Type': 'application/json'

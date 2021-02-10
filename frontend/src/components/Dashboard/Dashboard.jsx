@@ -100,7 +100,7 @@ export default function Dashboard({ getApartment, getSlug }) {
       </div>
 
       <div className='float-right'>
-        <AptFeedback />
+        <AptFeedback apt={apt} />
       </div>
 
       <div>

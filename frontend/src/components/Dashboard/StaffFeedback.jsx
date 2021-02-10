@@ -11,7 +11,7 @@ export default function StaffFeedback({ aptName, employees, route }) {
   // Popup for adding new employee true or false
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id = open ? 'add-btn' : undefined;
 
   // Create new employee
   function createEmployee(name, phone, email) {
@@ -56,13 +56,13 @@ export default function StaffFeedback({ aptName, employees, route }) {
       </div>
       <div className='float-right'>
         <button
-          id='add-btn'
+          id={id}
           onClick={(e) => { setAnchorEl(e.currentTarget); }}
         >
           + Add New Employee
         </button>
         <Popover
-          id="add-btn"
+          id={id}
           open={open}
           anchorEl={anchorEl}
           onClose={() => { setAnchorEl(null); }}
