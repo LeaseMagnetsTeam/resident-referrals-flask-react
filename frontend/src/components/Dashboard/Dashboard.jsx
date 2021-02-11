@@ -15,54 +15,17 @@ import './dashboard.css';
 
 export default function Dashboard({ getApartment, getSlug }) {
   const [apt, setApt] = useState();
-  // TODO: Get leasing staff from backend
-  const [staff, setStaff] = useState([
-    {
-      id: 1,
-      name: "Amulya Parmar"
-    },
-    {
-      id: 2,
-      name: "Amulya Parmar"
-    },
-    {
-      id: 3,
-      name: "Amulya Parmar"
-    },
-    {
-      id: 4,
-      name: "Jonathan Chuang"
-    },
-    {
-      id: 5,
-      name: "Jonathan Chuang"
-    },
-    {
-      id: 6,
-      name: "Jonathan Chuang"
-    },
-  ]);
-  const [maintenance, setMaintenance] = useState([
-    {
-      id: 4,
-      name: "Jonathan Chuang"
-    },
-    {
-      id: 5,
-      name: "Jonathan Chuang"
-    },
-    {
-      id: 6,
-      name: "Jonathan Chuang"
-    },
-  ]);
+  const [staff, setStaff] = useState([]);
+  const [maintenance, setMaintenance] = useState([]);
+  const [staffBadges, setStaffBadges] = useState([]);
+  const [aptBadges, setAptBadges] = useState([]);
 
   // Get leasing/maintenance staff
   // setState = setter function
   // slug = aptName slug
   // staff = "Staff" or "Maintenance"
-  function getStaff(setState, slug, staff) {
-    fetch(`http://localhost:8080/users/${slug}/${staff}`)
+  function getStaff(setState, staff) {
+    fetch(`http://localhost:8080/users/${getSlug()}/${staff}`)
       .then((response) => {
         return response.json();
       })
@@ -74,7 +37,20 @@ export default function Dashboard({ getApartment, getSlug }) {
       })
   }
 
-  // TODO: GET reviews
+  // GET badges with counts
+  function getBadges(setState, type) {
+    fetch(`http://localhost:8080/badges/${getSlug()}/${type}`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setState(data.badges);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      })
+  }
 
   // Which tab user is on
   const [tab, setTab] = useState(0);
@@ -85,8 +61,10 @@ export default function Dashboard({ getApartment, getSlug }) {
 
   useEffect(() => {
     getApartment(setApt, getSlug());
-    getStaff(setStaff, getSlug(), "Staff");
-    getStaff(setMaintenance, getSlug(), "Maintenance");
+    getStaff(setStaff, "Staff");
+    getStaff(setMaintenance, "Maintenance");
+    getBadges(setStaffBadges, "staff");
+    getBadges(setAptBadges, "apartment");
   }, []);
 
   return (
@@ -100,15 +78,18 @@ export default function Dashboard({ getApartment, getSlug }) {
       </div>
 
       <div className='float-right'>
-        <AptFeedback apt={apt} />
+        {(aptBadges) && <AptFeedback apt={apt} badges={aptBadges} />}
       </div>
 
       <div>
         <h1>Staff Feedback</h1>
 
         <div className='dashboard-badge-container'>
-          <Badge number={10} text={"friendly"} />
-          <Badge number={90} text={"rude"} />
+          {(staffBadges) && Object.entries(staffBadges).map(([key,value]) => {
+            return (
+                <Badge number={value} text={key.toLowerCase()} />
+            );
+          })}
         </div>
 
         <AppBar position="static">

@@ -34,7 +34,7 @@ export default function Employee({ slugToString, getSlug }) {
 
   // Get reviews for user
   function getReviews() {
-    fetch(`http://localhost:8080/reviews/${"4"}/${getSlug()}`)
+    fetch(`http://localhost:8080/reviews/${getAptSlug()}/${getSlug()}`)
       .then((response) => {
         return response.json();
       })

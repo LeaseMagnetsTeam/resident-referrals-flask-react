@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Banner from './Banner';
 import './question.css';
 
-export default function Exit({ who, apt_template, question_template, rating, feedback, selectedStaffBadges, selectedAptBadges }) {
+export default function Exit({ getSlug, who, apt_template, question_template, rating, feedback, selectedStaffBadges, selectedAptBadges }) {
   // After all data is collected, send data to backend via json
   useEffect(() => {
     // TODO: Handle badges...
@@ -30,7 +30,7 @@ export default function Exit({ who, apt_template, question_template, rating, fee
               }
     }
     // POST review to backend
-    fetch(`http://localhost:8080/reviews/${apt_template.id}/${user_id}`, {
+    fetch(`http://localhost:8080/reviews/${getSlug()}/${user_id}`, {
       method: 'POST',
       headers: {
       'Content-Type': 'application/json'

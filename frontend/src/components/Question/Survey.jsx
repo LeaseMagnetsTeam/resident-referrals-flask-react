@@ -164,6 +164,7 @@ export default function Survey({ getApartment, getSlug }) {
     }
     {(route === '/exit-page' && aptTemplate) &&
       <Exit
+        getSlug={getSlug}
         who={who}
         apt_template={aptTemplate}
         rating={rating}

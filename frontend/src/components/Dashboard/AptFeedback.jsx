@@ -4,8 +4,7 @@ import Badge from './Badge';
 // Material UI imports
 import Rating from '@material-ui/lab/Rating';
 
-// TODO: map out aptBadges and pass in rating for defaultValue
-export default function ApartmentFeedback({ apt }) {
+export default function ApartmentFeedback({ apt, badges }) {
   // Number of reviews & rating
   const [amount, setAmount] = useState(0);
   const [rating, setRating] = useState(0);
@@ -39,8 +38,11 @@ export default function ApartmentFeedback({ apt }) {
     <div className='dashboard-apt-container'>
       <h1>Apartment Feedback</h1>
       <div className='dashboard-badge-container'>
-        <Badge number={30} text={"pet-friendly"} />
-        <Badge number={50} text={"great value"} />
+        {Object.entries(badges).map(([key,value]) => {
+          return (
+              <Badge number={value} text={key.toLowerCase()} />
+          );
+        })}
       </div>
       <div className='inline-block center'>
         <h1>{amount}</h1>

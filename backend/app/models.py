@@ -115,6 +115,7 @@ class Review(db.Model):
     '''Table for apartment reviews of staff/maintenance interaction.'''
     __tablename__ = "reviews"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    created_date = db.Column(db.DateTime, default=datetime.utcnow)
     rating = db.Column(db.Float, default=4.0)
     review = db.Column(db.String(500), default="")
     aptBadges = db.Column(db.JSON, nullable=False)

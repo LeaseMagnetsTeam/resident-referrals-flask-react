@@ -344,6 +344,7 @@ def users():
 
     return jsonify({"response": 405}), 405
 
+
 @app.route("/users/<apt_slug>/<type>", methods=["GET"])
 def getStaff(apt_slug, type):
     '''Returns all users at apartment_id whose role is <type>.'''
@@ -649,15 +650,22 @@ def viewAllReviews(apartment_id):
     return jsonify(**context)
 
 
-@app.route("/reviews/<int:apartment_id>/<int:user_id>", methods=["GET", "POST"])
-def viewReview(apartment_id, user_id):
+@app.route("/reviews/<apt_slug>/<int:user_id>", methods=["GET", "POST"])
+def viewReview(apt_slug, user_id):
     '''
         Create new resident review of an apartment or
         view all reviews for an employee of an apartment.
     '''
     # Make sure user and apartment exist
-    apartment = Apartment.query.get_or_404(apartment_id)
+    # apartment = Apartment.query.get_or_404(apartment_id)
     user = User.query.get_or_404(user_id)
+    # aptName will be a slug so need to convert to name first
+    aptName = apt_slug.replace("-", " ").title()
+    apt = (
+        db.session.query(Apartment)
+        .filter(Apartment.aptName == aptName)
+        .one()
+    )
 
     if request.method == "POST": # TODO: maybe try catch block? for 404 error
         # Get JSON from request
@@ -668,7 +676,7 @@ def viewReview(apartment_id, user_id):
             rating=body.get("rating"), \
             review=body.get("review"), \
             aptBadges=body.get("badges"), \
-            apartment_id=apartment_id, \
+            apartment=apt, \
             user_id=user_id
         )
 
@@ -680,7 +688,7 @@ def viewReview(apartment_id, user_id):
     # Query table to find all reviews that have this apt id and this user id
     data = (
         db.session.query(Review)
-        .filter(Review.apartment_id == apartment_id)
+        .filter(Review.apartment == apt)
         .filter(Review.user_id == user_id)
         .all()
     )
@@ -692,6 +700,43 @@ def viewReview(apartment_id, user_id):
 
     return jsonify(**context)
 
+
+@app.route("/badges/<apt_slug>/<type>", methods=["GET"])
+def getBadgeCount(apt_slug, type):
+    '''Returns dictionary with <type> of badges mapped to their amount.'''
+    # aptName will be a slug so need to convert to name first
+    aptName = apt_slug.replace("-", " ").title()
+    apt = (
+        db.session.query(Apartment)
+        .filter(Apartment.aptName == aptName)
+        .one()
+    )
+
+    # Get all reviews for this apartment
+    data = (
+        db.session.query(Review)
+        .filter(Review.apartment == apt)
+        .all()
+    )
+
+    # Map to keep track of counts
+    badges = {}
+
+    # Type: "apartment" or "staff"
+    # Parse through all reviews
+    for datum in data:
+        # Convert sql table to json
+        review = sqldict(datum)
+        # In case aptBadges doesn't even exist in this review
+        if review["aptBadges"]:
+            # Parse through apt badges
+            for badge in review["aptBadges"]["staff" if type == "staff" else "apt"]:
+                # If badge doesn't exist yet
+                badges.setdefault(badge, 0)
+                # Add count for this badge
+                badges[badge] += 1
+
+    return jsonify(badges=badges)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
