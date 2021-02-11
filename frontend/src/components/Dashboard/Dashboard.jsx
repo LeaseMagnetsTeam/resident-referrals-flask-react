@@ -120,6 +120,7 @@ export default function Dashboard({ getApartment, getSlug }) {
 
         <TabPanel value={tab} index={0}>
           <StaffFeedback
+            getSlug={getSlug}
             employees={staff}
             aptName={apt.aptName}
             route={"Staff"}
@@ -127,6 +128,7 @@ export default function Dashboard({ getApartment, getSlug }) {
         </TabPanel>
         <TabPanel value={tab} index={1}>
           <StaffFeedback
+            getSlug={getSlug}
             employees={maintenance}
             aptName={apt.aptName}
             route={"Maintenance"}

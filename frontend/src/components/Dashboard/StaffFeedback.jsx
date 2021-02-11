@@ -89,6 +89,7 @@ export default function StaffFeedback({ aptName, employees, route }) {
             return (
               <Employee
                 key={employee.id}
+                id={employee.id}
                 name={employee.name}
               />
             );
@@ -103,12 +104,12 @@ export default function StaffFeedback({ aptName, employees, route }) {
   );
 }
 
-function Employee({ name }) {
+function Employee({ id, name }) {
   // Create URL to see this employee's feedback
   function createURL() {
     const url = window.location.href;
-    const slug = name.trim().toLowerCase().replace(/ /g,"-");
-    window.open(`${url}/${slug}`, '_self');
+    // const slug = name.trim().toLowerCase().replace(/ /g,"-");
+    window.open(`${url}/${id}`, '_self');
   }
 
   return (

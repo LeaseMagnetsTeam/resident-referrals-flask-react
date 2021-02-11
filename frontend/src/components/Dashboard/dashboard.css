@@ -254,10 +254,101 @@
   border-radius: 50px;
   padding: 7px 15px 7px 15px;
   margin: 0px 5px 8px 5px;
+  box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.2);
 }
 
 .dashboard-badge-container {
   margin-bottom: 13px;
+}
+
+.dashboard-employee-container {
+  margin: 30px 5% 0% 5%;
+  color: black;
+}
+
+.employee-navigation {
+  color: #3175B1;
+  font-size: 28px;
+  padding-bottom: 30px;
+}
+
+.employee-navigation .most-left {
+  padding-right: 15px;
+}
+
+.employee-navigation .left {
+  padding-left: 15px;
+}
+
+.employee-navigation .center {
+  font-weight: bold;
+  padding-right: 120px;
+  padding-left: 120px;
+}
+
+.employee-navigation .right {
+  padding-right: 15px
+}
+
+.employee-navigation .most-right {
+  padding-left: 15px;
+}
+
+.employee-navigation span:not(.center):hover {
+  opacity: 0.7;
+}
+
+.dashboard-employee-table table {
+  /* table-layout: fixed; */
+  width: 100%;
+  border-radius: 4px;
+  box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  margin-bottom: 30px;
+  /* white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis; */
+}
+
+.dashboard-employee-table th {
+  height: 50px;
+  background-color: #3175B1;
+  color: white;
+  padding-left: 20px;
+  font-size: 22px;
+}
+
+.dashboard-employee-table td {
+  height: 40px;
+  padding-left: 20px;
+}
+
+.dashboard-employee-table .grey {
+  background-color: #f0f5f9;
+}
+
+.dashboard-employee-table .date {
+  width: 20%
+}
+
+.dashboard-employee-table .rating {
+  width: 20%;
+}
+
+.dashboard-employee-table .comments {
+  width: 60%;
+}
+
+.dashboard-employee-table .comments button {
+  border: none;
+  background-color: inherit;
+  float: right;
+  color: #3175B1;
+  padding: 0px 20px 3px 20px;
+}
+
+.dashboard-employee-table .expanded-comments {
+  padding: 24px 24px 11px 24px;
 }
 
 @media only screen and (max-width: 600px) {

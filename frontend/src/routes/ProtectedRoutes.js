@@ -3,7 +3,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 // import { SignUp, SignIn, ResetPassword } from '../components/Auth';
 import { Navbar } from "../components/Navbar";
-import { Home, Login, Dashboard } from "../components/Dashboard";
+import { Home, Login, Dashboard, Employee } from "../components/Dashboard";
 import Survey from "../components/Question/Survey";
 
 const ProtectedRoutes = ({ apartments, getApartment, getSlug, stringToSlug, slugToString }) => {
@@ -17,21 +17,27 @@ const ProtectedRoutes = ({ apartments, getApartment, getSlug, stringToSlug, slug
             stringToSlug={stringToSlug}
           />
         </Route>
-        <Route path="/login/:aptName">
+        <Route path="/login/:aptName" exact>
           <Login
             getSlug={getSlug}
             slugToString={slugToString}
           />
         </Route>
-        <Route path="/portal/:aptName">
+        <Route path="/portal/:aptName" exact>
           <Dashboard
             getApartment={getApartment}
             getSlug={getSlug}
           />
         </Route>
-        <Route path="/survey/:aptName">
+        <Route path="/survey/:aptName" exact>
           <Survey
             getApartment={getApartment}
+            getSlug={getSlug}
+          />
+        </Route>
+        <Route path="/portal/:aptName/:staffName" exact>
+          <Employee
+            slugToString={slugToString}
             getSlug={getSlug}
           />
         </Route>
