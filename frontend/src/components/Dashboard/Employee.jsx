@@ -109,6 +109,7 @@ function Table({ reviews, page }) {
             />
           );
         })}
+        {(reviews.length === 0) && <NoRows />}
       </table>
     </div>
   );
@@ -193,11 +194,11 @@ function Navigation({ page, setPage, pages }) {
   }
 
   function handlePrev() {
-    if (page != 1) setPage(page - 1);
+    if (page !== 1) setPage(page - 1);
   }
 
   function handleNext() {
-    if (page != pages) setPage(page + 1);
+    if (page !== pages) setPage(page + 1);
   }
 
   function handleLast() {
@@ -222,5 +223,17 @@ function Navigation({ page, setPage, pages }) {
         {" Last >>"}
       </span>
     </div>
+  );
+}
+
+function NoRows() {
+  return (
+    <tr>
+      <td colspan='3'>
+        <div className='no-employees center-div'>
+          No reviews found.
+        </div>
+      </td>
+    </tr>
   );
 }
