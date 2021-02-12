@@ -28,7 +28,7 @@ export default function SpecialOffer({ setRoute, apt_template }) {
               B
             </div>
           </div>
-          No thank you, I don't want special offers.
+          No thank you, I don't want special offers from {apt_template.aptName}.
         </button>
       </div>
     </div>
