@@ -150,6 +150,8 @@ export default function Survey({ getApartment, getSlug }) {
         value={rating}
         setValue={setRating}
         apt_template={aptTemplate}
+        staffBadges={aptTemplate.aptBadges.staff}
+        aptBadges={aptTemplate.aptBadges.apt}
         selectedStaffBadges={selectedStaffBadges}
         selectedAptBadges={selectedAptBadges}
         setSelectedStaffBadges={setSelectedStaffBadges}

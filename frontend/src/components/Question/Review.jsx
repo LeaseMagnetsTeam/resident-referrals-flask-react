@@ -7,7 +7,7 @@ import Rating from '@material-ui/lab/Rating';
 
 import './question.css';
 
-export default function RateReview({ staff, value, setValue, setFeedback, setRoute, apt_template, selectedStaffBadges, selectedAptBadges, setSelectedStaffBadges, setSelectedAptBadges }) {
+export default function RateReview({ staff, value, setValue, setFeedback, setRoute, apt_template, staffBadges, aptBadges, selectedStaffBadges, selectedAptBadges, setSelectedStaffBadges, setSelectedAptBadges }) {
   // Track of user rates <= 3 or > 3
   const [isGood, setIsGood] = useState(true);
 
@@ -21,24 +21,6 @@ export default function RateReview({ staff, value, setValue, setFeedback, setRou
     `My interaction with ${(staff) ? staff : apt_template.aptName} was okay because`,
     `My interaction with ${(staff) ? staff : apt_template.aptName} was good because`,
     `My interaction with ${(staff) ? staff : apt_template.aptName} was great because`
-  ]);
-
-  // Temp badges for staff
-  const [staffBadges] = useState([
-    { text: 'Friendly' },
-    { text: 'Helpful' },
-    { text: 'Punctual' },
-    { text: 'Resourceful' },
-    { text: 'Rude' },
-    { text: 'Unhelpful' }
-  ]);
-
-  // Temp badges for apt
-  const [aptBadges] = useState([
-    { text: 'Great Amentities' },
-    { text: 'Spacious' },
-    { text: 'Pet Friendly' },
-    { text: 'Great Value' }
   ]);
 
   // Handle button click on Rate component

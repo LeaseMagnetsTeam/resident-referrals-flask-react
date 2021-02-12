@@ -20,9 +20,9 @@ export default function Badges({ badges, selected, setSelected }) {
         {badges.map((badge) => {
           return (
             <>
-              <input type='checkbox' id={badge.text} onClick={modifySelected} />
-              <label htmlFor={badge.text} >
-                <h5><span></span> {badge.text}</h5>
+              <input type='checkbox' id={badge} onClick={modifySelected} />
+              <label htmlFor={badge} >
+                <h5><span></span> {badge}</h5>
               </label>
             </>
           );

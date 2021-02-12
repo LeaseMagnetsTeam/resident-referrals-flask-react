@@ -11,7 +11,7 @@ export default function SpecialOffer({ setRoute, apt_template }) {
       <Banner name={apt_template.aptName} image={"https://advancelocal-adapter-image-uploads.s3.amazonaws.com/image.nj.com/home/njo-media/width2048/img/entertainment_impact/photo/csm1016-oceanave-s010-ext-hero-dusk-final2000jpg-d3e3b1df09bff4be.jpg"} />
       <div>
         <h1 className='question-text'>
-          Would you like to receive special offers?
+          Would you like to receive {apt_template.specialOffer}?
         </h1>
         <button className='answer-choice' onClick={() => setWantsOffer(true)}>
           <div className='center-div letter-container'>
@@ -28,7 +28,7 @@ export default function SpecialOffer({ setRoute, apt_template }) {
               B
             </div>
           </div>
-          No thank you, I don't want special offers from {apt_template.aptName}.
+          No thank you, I don't want {apt_template.specialOffer} from {apt_template.aptName}.
         </button>
       </div>
     </div>
