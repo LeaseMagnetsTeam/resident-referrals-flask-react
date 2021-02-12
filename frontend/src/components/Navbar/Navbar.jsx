@@ -1,4 +1,5 @@
 import React from 'react';
+import { MeIcon } from '../../images/Icon';
 
 export default function Navbar() {
   function openLandingPage() {
@@ -7,8 +8,10 @@ export default function Navbar() {
 
   return (
     <div className='navbar' onClick={openLandingPage}>
-      <span className='white'>RESIDENTS.
-      <span className='light-grey'>CO</span></span>
+      <div className='navbar-flex'>
+      <span className='dark-grey'>residents</span>
+      <MeIcon />
+      </div>
     </div>
   );
 }

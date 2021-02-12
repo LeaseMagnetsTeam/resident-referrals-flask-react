@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, redirect, render_template
 from flask_cors import CORS
-from models import db, Lead, User, Apartment, ConstantsModel, initialize_db
+from models import db, Lead, User, Apartment, ConstantsModel, initialize_db, Review
 from util import request_data
 import os
 import json
@@ -35,6 +35,21 @@ def sqldict(row):
 @app.route("/")
 def hello_world():
     return "hello world"
+
+
+@app.route("/init_db", methods=["GET", "POST"])
+def init_db():
+    if app.config["DEBUG"]:
+        db.drop_all()
+        db.create_all()
+    return "initialized db"
+
+
+@app.route("/delete_db", methods=["GET", "POST"])
+def delete_db():
+    if app.config["DEBUG"]:
+        db.drop_all()
+    return "deleted db"
 
 
 @app.route("/followups", methods=["GET", "POST"])
@@ -240,7 +255,7 @@ def experience():
     return jsonify(id=lead.id, name=lead.name, email=lead.email)
 
 """
-    @DEPRECRATED 
+    @DEPRECRATED
 """
 @app.route("/send_sms/", methods=["GET", "POST"])
 def send_sms():
@@ -275,7 +290,7 @@ def send_sms():
             "email": ...,
             "phoneNumber": ...,
             "role": ...,
-            "apartment_id: ... 
+            "apartment_id: ...
         }
 
         Notes: apartment_id is a @REQUIRED field
@@ -297,21 +312,63 @@ def users():
 
     elif request.method == "POST":
             # TODO: Check params
-            body = request.get_json()
-            apartment = Apartment.query.get_or_404(body["apartment"])
+            body = request_data()
 
-            user = User(name=body["name"], \
-                        phoneNumber=body["phoneNumber"], \
-                        email=body["email"], \
-                        role=body["role"], \
-                        apartment=apartment)
-            
+            # If apartment is given as an string (name of apt)
+            if type(body["apartment"]) == type(body["name"]):
+                data = (
+                    db.session.query(Apartment)
+                    .filter(Apartment.aptName == body["apartment"])
+                    .one()
+                )
+
+                user = User(name=body["name"], \
+                            phoneNumber=body["phoneNumber"], \
+                            email=body["email"], \
+                            role=body["role"], \
+                            apartment=data)
+            # If apartment is given as an integer (apt id)
+            else:
+                apartment = Apartment.query.get_or_404(body["apartment"])
+
+                user = User(name=body["name"], \
+                            phoneNumber=body["phoneNumber"], \
+                            email=body["email"], \
+                            role=body["role"], \
+                            apartment=apartment)
+
             db.session.add(user)
             db.session.commit()
 
             return jsonify(user=sqldict(user)), 201
-    
+
     return jsonify({"response": 405}), 405
+
+
+@app.route("/users/<apt_slug>/<type>", methods=["GET"])
+def getStaff(apt_slug, type):
+    '''Returns all users at apartment_id whose role is <type>.'''
+    # aptName will be a slug so need to convert to name first
+    aptName = apt_slug.replace("-", " ").title()
+    apt = (
+        db.session.query(Apartment)
+        .filter(Apartment.aptName == aptName)
+        .one()
+    )
+    # Query User table and filter for apt <type> (staff or maintenance)
+    data = (
+        db.session.query(User)
+        .filter(User.apartment == apt)
+        .filter(User.role == type)
+        .all()
+    )
+    # Convert all staff to json in a list
+    staff = []
+    for datum in data:
+        staff.append(sqldict(datum))
+    context = { "users": staff }
+
+    return jsonify(**context)
 
 
 """
@@ -325,7 +382,7 @@ def users():
             "email": ...,
             "phoneNumber": ...,
             "role": ...,
-            "apartment_id: ... 
+            "apartment_id: ...
         }
 
         Notes: Sending an invalid apartment_id will return a 404 response code.
@@ -339,10 +396,10 @@ def users():
 def user(user_id):
     if request.method == "GET":
         user = User.query.get_or_404(user_id)
-        
+
         return jsonify(user=sqldict(user))
 
-    elif request.method == "DELETE":       
+    elif request.method == "DELETE":
         user = User.query.get_or_404(user_id)
         db.session.delete(user)
         db.session.commit()
@@ -350,7 +407,7 @@ def user(user_id):
         return jsonify({"response": 200}), 200
 
     elif request.method == "PUT":
-        body = request.get_json()
+        body = request_data()
         user = User.query.get_or_404(user_id)
 
         # TODO: Data transfer objects, try and catch
@@ -369,7 +426,7 @@ def user(user_id):
         if "apartment" in body:
             apartment = Apartment.query.get_or_404(body["apartment"])
             user.apartment = apartment
-        
+
         db.session.commit()
         return jsonify(user=sqldict(user))
 
@@ -401,15 +458,17 @@ def apartment():
         return jsonify(apartments=apartments)
 
     elif request.method == "POST":
-        body = request.get_json()
+        body = request_data()
 
         # TODO: Check params
         apartment = Apartment(\
             aptName=body["aptName"], \
+            aptBadges=json.loads(body["aptBadges"]), \
             website=body["website"], \
             units=body["units"], \
             propertyType=body["propertyType"], \
-            websiteType=body["websiteType"])
+            websiteType=body["websiteType"], \
+            reviewLink=body["reviewLink"])
 
         db.session.add(apartment)
         db.session.commit()
@@ -417,6 +476,23 @@ def apartment():
         return jsonify(apartment=sqldict(apartment)), 201
 
     return jsonify({"response": 405}), 405
+
+
+@app.route("/apartments/<apt_slug>", methods=["GET"])
+def getApartmentByName(apt_slug):
+    '''Returns apartment json via search by name.'''
+    # apt_slug will be the apt name in all lower case
+    # connected by '-'
+    aptName = apt_slug.replace("-", " ").title()
+
+    # Query by aptName
+    data = (
+        db.session.query(Apartment)
+        .filter(Apartment.aptName == aptName)
+        .one()
+    )
+
+    return jsonify(apartment=sqldict(data)), 201
 
 
 """
@@ -450,7 +526,7 @@ def apartments(apartment_id):
 
     elif request.method == "PUT":
         # TODO: Data transfer object implementation, this is quick and dirty for now.
-        body = request.get_json()
+        body = request_data()
         apartment = Apartment.query.get_or_404(apartment_id)
 
         if "aptName" in body:
@@ -467,6 +543,12 @@ def apartments(apartment_id):
 
         if "websiteType" in body:
             apartment.websiteType = body["websiteType"]
+
+        if "aptBadges" in body:
+            apartment.aptBadges = body["aptBadges"]
+
+        if "specialOffer" in body:
+            apartment.specialOffer = body["specialOffer"]
 
         db.session.commit()
         return jsonify(apartment=sqldict(apartment))
@@ -552,6 +634,115 @@ def viewSMS(sessionSid):
         messages.append(record.data)
     return (jsonify(messages))
 
+
+@app.route("/reviews/<int:apartment_id>", methods=["GET", "POST"])
+def viewAllReviews(apartment_id):
+    '''View all reviews for an apartment.'''
+    # Make sure user and apartment exist
+    apartment = Apartment.query.get_or_404(apartment_id)
+
+    # Query table to find all reviews that have this apt id
+    data = (
+        db.session.query(Review)
+        .filter(Review.apartment_id == apartment_id)
+        .all()
+    )
+    # Convert all reviews to json in a list
+    reviews = []
+    for datum in data:
+        reviews.append(sqldict(datum))
+    context = { "reviews": reviews }
+
+    return jsonify(**context)
+
+
+@app.route("/reviews/<apt_slug>/<int:user_id>", methods=["GET", "POST"])
+def viewReview(apt_slug, user_id):
+    '''
+        Create new resident review of an apartment or
+        view all reviews for an employee of an apartment.
+    '''
+    # Make sure user and apartment exist
+    # apartment = Apartment.query.get_or_404(apartment_id)
+    user = User.query.get_or_404(user_id)
+    # aptName will be a slug so need to convert to name first
+    aptName = apt_slug.replace("-", " ").title()
+    apt = (
+        db.session.query(Apartment)
+        .filter(Apartment.aptName == aptName)
+        .one()
+    )
+
+    if request.method == "POST": # TODO: maybe try catch block? for 404 error
+        # Get JSON from request
+        body = request_data()
+
+        # Create new review
+        new_review = Review(\
+            rating=body.get("rating"), \
+            review=body.get("review"), \
+            aptBadges=body.get("badges"), \
+            apartment=apt, \
+            user_id=user_id
+        )
+
+        # Put new review into database
+        db.session.add(new_review)
+        db.session.commit()
+
+    # GET request
+    # Query table to find all reviews that have this apt id and this user id
+    data = (
+        db.session.query(Review)
+        .filter(Review.apartment == apt)
+        .filter(Review.user_id == user_id)
+        .all()
+    )
+    # Convert all reviews to json in a list
+    reviews = []
+    for datum in data:
+        reviews.append(sqldict(datum))
+    context = { "reviews": reviews }
+
+    return jsonify(**context)
+
+
+@app.route("/badges/<apt_slug>/<type>", methods=["GET"])
+def getBadgeCount(apt_slug, type):
+    '''Returns dictionary with <type> of badges mapped to their amount.'''
+    # aptName will be a slug so need to convert to name first
+    aptName = apt_slug.replace("-", " ").title()
+    apt = (
+        db.session.query(Apartment)
+        .filter(Apartment.aptName == aptName)
+        .one()
+    )
+
+    # Get all reviews for this apartment
+    data = (
+        db.session.query(Review)
+        .filter(Review.apartment == apt)
+        .all()
+    )
+
+    # Map to keep track of counts
+    badges = {}
+
+    # Type: "apartment" or "staff"
+    # Parse through all reviews
+    for datum in data:
+        # Convert sql table to json
+        review = sqldict(datum)
+        # In case aptBadges doesn't even exist in this review
+        if review["aptBadges"]:
+            # Parse through apt badges
+            for badge in review["aptBadges"]["staff" if type == "staff" else "apt"]:
+                # If badge doesn't exist yet
+                badges.setdefault(badge, 0)
+                # Add count for this badge
+                badges[badge] += 1
+
+    return jsonify(badges=badges)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)

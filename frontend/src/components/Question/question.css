@@ -41,9 +41,9 @@
   width: 30px;
   height: 30px;
   border-style: none;
-  border-color: #df4343;
+  border-color: #3175B1;
   border-radius: 50px;
-  background-color: #ED6E48;
+  background-color: #3175B1;
   margin-right: 8px;
 }
 
@@ -78,7 +78,7 @@
 .offer-form input[type='submit'], .offer-form input[type='reset'] {
   text-align: center;
   margin: 4px 3px 6px 3px;
-  border: 2px solid #ED6E48;
+  border: 2px solid #3175B1;
   border-radius: 6px;
   font-size: 20px;
   font-weight: bold;
@@ -93,12 +93,12 @@
 .offer-form input[type='submit'] {
   width: 44vw;
   color: white;
-  background-color: #ED6E48;
+  background-color: #3175B1;
 }
 
 .offer-form input[type='reset'] {
   width: 24vw;
-  color: #ED6E48;
+  color: #3175B1;
   background-color: white;
 }
 
@@ -129,7 +129,7 @@
   border-radius: 8px;
   border: none;
   font-size: 28px;
-  background-color: #ED6E48;
+  background-color: #3175B1;
   color: white;
   font-weight: bold;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
@@ -162,7 +162,7 @@
 }
 
 .badges input[type='checkbox']:checked+label {
-  background-color: #ED6E48;
+  background-color: #3175B1;
   color: white;
   filter: none;
 }
