@@ -3,6 +3,7 @@ import QRCode from './QRCode';
 import AptFeedback from './AptFeedback';
 import StaffFeedback from './StaffFeedback';
 import Badge from './Badge';
+import Settings from './Settings';
 
 // Material UI Imports
 import AppBar from '@material-ui/core/AppBar';
@@ -17,8 +18,8 @@ export default function Dashboard({ getApartment, getSlug }) {
   const [apt, setApt] = useState();
   const [staff, setStaff] = useState([]);
   const [maintenance, setMaintenance] = useState([]);
-  const [staffBadges, setStaffBadges] = useState([]);
-  const [aptBadges, setAptBadges] = useState([]);
+  const [staffBadges, setStaffBadges] = useState();
+  const [aptBadges, setAptBadges] = useState();
 
   // Get leasing/maintenance staff
   // setState = setter function
@@ -71,7 +72,15 @@ export default function Dashboard({ getApartment, getSlug }) {
     <>
     {(apt) &&
     <div className='dashboard-container'>
-      <h1>{apt.aptName} Admin Portal</h1>
+      <h1>
+        {apt.aptName} Admin Portal
+        <Settings
+          apt_id={apt.id}
+          specialOffer={apt.specialOffer}
+          aptBadges={apt.aptBadges.apt}
+          staffBadges={apt.aptBadges.staff}
+        />
+      </h1>
 
       <div className='float-left'>
         <QRCode link={`http://localhost:3000/survey/${getSlug()}`} />

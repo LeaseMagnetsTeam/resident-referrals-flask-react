@@ -526,7 +526,7 @@ def apartments(apartment_id):
 
     elif request.method == "PUT":
         # TODO: Data transfer object implementation, this is quick and dirty for now.
-        body = request.get_json()
+        body = request_data()
         apartment = Apartment.query.get_or_404(apartment_id)
 
         if "aptName" in body:
@@ -543,6 +543,12 @@ def apartments(apartment_id):
 
         if "websiteType" in body:
             apartment.websiteType = body["websiteType"]
+
+        if "aptBadges" in body:
+            apartment.aptBadges = body["aptBadges"]
+
+        if "specialOffer" in body:
+            apartment.specialOffer = body["specialOffer"]
 
         db.session.commit()
         return jsonify(apartment=sqldict(apartment))

@@ -91,6 +91,7 @@ class Apartment(db.Model):
     units = db.Column(db.Integer, default=0)
     propertyType = db.Column(db.String(200), default="")
     websiteType = db.Column(db.String(200), default="")
+    specialOffer = db.Column(db.String(200), default="special offers")
 
     def __repr__(self):
         return f"<Apartment {self.id}>"

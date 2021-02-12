@@ -136,7 +136,7 @@
   display: block;
 }
 
-.dashboard-staff-container .no-employees {
+.no-employees {
   font-size: 40px;
   height: 200px;
 }
@@ -349,6 +349,104 @@
 
 .dashboard-employee-table .expanded-comments {
   padding: 24px 24px 11px 24px;
+}
+
+.dashboard-settings {
+  display: inline-block;
+  margin-left: 10px;
+  color: #3175B1;
+}
+
+.dashboard-settings button {
+  border: none;
+  background-color: inherit;
+}
+
+.dashboard-settings-form {
+  padding: 20px;
+  color: black;
+}
+
+.dashboard-settings-form h2 {
+  color: #3175B1;
+}
+
+.dashboard-settings-form table {
+  table-layout: fixed;
+}
+
+.dashboard-settings-form td {
+  vertical-align:top;
+}
+
+.dashboard-settings-form label {
+  font-size: 20px;
+}
+
+.dashboard-settings-form input {
+  height: 36px;
+  border: none;
+  border-radius: 4px;
+  background-color: #efefef;
+  margin-bottom: 3px;
+}
+
+.dashboard-settings-form input[type='submit'], .dashboard-settings-form input[type='reset'] {
+  border: none;
+  border-radius: 4px;
+  background-color: white;
+  padding: 0px 15px 0px 15px;
+  margin: 12px 3px 0px 3px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.dashboard-settings-form input[type='submit'] {
+  color: #3175B1;
+  border: 1px solid #3175B1;
+}
+
+.dashboard-settings-form input[type='submit']:hover {
+  background-color: #3175B1;
+  color: white;
+}
+
+.dashboard-settings-form input[type='reset'] {
+  color: red;
+  border: 1px solid red;
+}
+
+.dashboard-settings-form input[type='reset']:hover {
+  background-color: red;
+  color: white;
+}
+
+.dashboard-settings-form .add {
+  background-color: inherit;
+  border: none;
+  color: #3175B1;
+  font-size: 22px;
+  font-weight: bolder;
+}
+
+.dashboard-settings-form .badge-container {
+  margin-top: 12px;
+}
+
+.dashboard-settings-form .badge-container p {
+  line-height: 8px;
+}
+
+.dashboard-settings-form .badge-container button {
+  background-color: inherit;
+  border: none;
+  color: red;
+  font-size: 20px;
+  font-weight: bolder;
+}
+
+.dashboard-settings-form .badge-container button:hover {
+  opacity: 0.5;
 }
 
 @media only screen and (max-width: 600px) {
