@@ -102,7 +102,7 @@ function Table({ reviews, page }) {
             <Row
               key={idx}
               idx={idx}
-              date={review.created_date}
+              date={review.created_date.substring(0, review.created_date.indexOf(':') - 2)}
               rating={review.rating}
               comments={review.review}
               badges={(review.aptBadges) ? review.aptBadges.staff : []}
