@@ -45,7 +45,6 @@ export default function Dashboard({ getApartment, getSlug }) {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         setState(data.badges);
       })
       .catch((error) => {
