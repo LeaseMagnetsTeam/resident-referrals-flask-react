@@ -8,10 +8,22 @@ import Popover from '@material-ui/core/Popover';
 //  employees = list of employees for this group
 //  route = Staff or Maintenance to specify POST request for new employee
 export default function StaffFeedback({ aptName, employees, route }) {
+  const [tempEmps, setTempEmps] = useState(employees);
   // Popup for adding new employee true or false
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const id = open ? 'add-btn' : undefined;
+
+  // Handle user search
+  function handleSearch(event) {
+    const query = event.target.value.toLowerCase();
+    console.log("Looking for", query);
+
+    // Filter all apts that contain "query"
+    const temp = employees.filter((emp) => emp.name.toLowerCase().includes(query));
+    // Put results in tempApts
+    setTempEmps(temp);
+  }
 
   // Create new employee
   function createEmployee(name, phone, email) {
@@ -21,7 +33,7 @@ export default function StaffFeedback({ aptName, employees, route }) {
       email: email,
       role: route,
       apartment: aptName
-    }
+    };
 
     // POST User to backend
     fetch(`http://localhost:8080/users`, {
@@ -41,7 +53,7 @@ export default function StaffFeedback({ aptName, employees, route }) {
       })
       .catch((error) => {
         console.log(error.message);
-      })
+      });
   }
 
   return (
@@ -51,7 +63,7 @@ export default function StaffFeedback({ aptName, employees, route }) {
           type='search'
           placeholder=' 🔍  Search by employee name'
           autocomplete
-
+          onChange={handleSearch}
         />
       </div>
       <div className='float-right'>
@@ -85,7 +97,16 @@ export default function StaffFeedback({ aptName, employees, route }) {
       <br />
       {(employees.length > 0) ?
         <div className='employees'>
-          {employees.map((employee) => {
+          {(tempEmps) && tempEmps.map((employee) => {
+            return (
+              <Employee
+                key={employee.id}
+                id={employee.id}
+                name={employee.name}
+              />
+            );
+          })}
+          {(tempEmps.length === 0) && employees.map((employee) => {
             return (
               <Employee
                 key={employee.id}
@@ -108,15 +129,11 @@ function Employee({ id, name }) {
   // Create URL to see this employee's feedback
   function createURL() {
     const url = window.location.href;
-    // const slug = name.trim().toLowerCase().replace(/ /g,"-");
     window.open(`${url}/${id}`, '_self');
   }
 
   return (
-    <div
-      className='employee'
-      onClick={createURL}
-    >
+    <div className='employee' onClick={createURL}>
       {name}
     </div>
   );
