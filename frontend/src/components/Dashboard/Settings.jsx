@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
 
+import HOST from '../../utils/request.js';
+
 // Material-UI Imports
 import Popover from '@material-ui/core/Popover';
 
@@ -67,9 +69,9 @@ function Form({ apt_id, specialOffer, aptBadges, staffBadges, setAnchorEl }) {
         staff: newStaffBadges
       }
     };
-    
+
     // PUT request to backend
-    fetch(`http://localhost:8080/apartments/${apt_id}`, {
+    fetch(`${HOST}/apartments/${apt_id}`, {
       method: 'PUT',
       headers: {
       'Content-Type': 'application/json'

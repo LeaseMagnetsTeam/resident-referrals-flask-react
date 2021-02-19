@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import HOST from '../../utils/request.js';
+
 // Material-UI Imports
 import Popover from '@material-ui/core/Popover';
 
@@ -36,7 +38,7 @@ export default function StaffFeedback({ aptName, employees, route }) {
     };
 
     // POST User to backend
-    fetch(`http://localhost:8080/users`, {
+    fetch(`${HOST}/users`, {
       method: 'POST',
       headers: {
       'Content-Type': 'application/json'
@@ -47,7 +49,7 @@ export default function StaffFeedback({ aptName, employees, route }) {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         // Refresh page to get updated list of employees
         window.location.reload(false);
       })

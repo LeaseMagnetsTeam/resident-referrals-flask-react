@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Question, Exit, SpecialOffer, Review } from './index.js';
 
+import HOST from '../../utils/request.js';
+
 // Question templates
 import {
   // apt_template,
@@ -45,7 +47,7 @@ export default function Survey({ getApartment, getSlug }) {
 
   // Get all leasing staff and append to existing question template
   function getLeasingStaff(slug) {
-    fetch(`http://localhost:8080/users/${slug}/Staff`)
+    fetch(`${HOST}/users/${slug}/Staff`)
       .then((response) => {
         return response.json();
       })
@@ -66,7 +68,7 @@ export default function Survey({ getApartment, getSlug }) {
 
   // Get all maintenance staff and append to existing question template
   function getMaintenance(slug) {
-    fetch(`http://localhost:8080/users/${slug}/Maintenance`)
+    fetch(`${HOST}/users/${slug}/Maintenance`)
       .then((response) => {
         return response.json();
       })

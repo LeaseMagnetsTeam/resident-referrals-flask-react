@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Loader } from 'tabler-react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
+import HOST from './utils/request.js';
+
 // import ProtectedNavbar from './components/Navbar/ProtectedNavbar';
 
 // import ResetPassword from './components/Auth/ResetPassword';
@@ -44,7 +46,8 @@ function App() {
 
   // Get apartment info using url slug
   function getApartment(setState, slug) {
-    fetch(`http://localhost:8080/apartments/${slug}`)
+    // fetch(`http://localhost:8080/apartments/${slug}`)
+    fetch(`${HOST}/apartments/${slug}`)
       .then((response) => {
         return response.json();
       })
@@ -53,12 +56,13 @@ function App() {
       })
       .catch((error) => {
         console.log(error.message);
-      })
+      });
   }
 
   // Get all apartments
   function getApartments() {
-    fetch("http://localhost:8080/apartments")
+    //get(`/apartments/${slug}`, null)
+    fetch(`${HOST}/apartments`)
       .then((response) => {
         return response.json();
       })

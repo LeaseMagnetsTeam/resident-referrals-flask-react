@@ -4,6 +4,8 @@ import Badge from "./Badge";
 // Material UI imports
 import Rating from '@material-ui/lab/Rating';
 
+import HOST from '../../utils/request.js';
+
 export default function Employee({ slugToString, getSlug }) {
   const [user, setUser] = useState();
   // Reviews state
@@ -20,7 +22,7 @@ export default function Employee({ slugToString, getSlug }) {
 
   // Get user
   function getUser() {
-    fetch(`http://localhost:8080/users/${getSlug()}`)
+    fetch(`${HOST}/users/${getSlug()}`)
       .then((response) => {
         return response.json();
       })
@@ -34,7 +36,7 @@ export default function Employee({ slugToString, getSlug }) {
 
   // Get reviews for user
   function getReviews() {
-    fetch(`http://localhost:8080/reviews/${getAptSlug()}/${getSlug()}`)
+    fetch(`${HOST}/reviews/${getAptSlug()}/${getSlug()}`)
       .then((response) => {
         return response.json();
       })

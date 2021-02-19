@@ -12,6 +12,8 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
+import HOST from '../../utils/request.js';
+
 import './dashboard.css';
 
 export default function Dashboard({ getApartment, getSlug }) {
@@ -26,7 +28,7 @@ export default function Dashboard({ getApartment, getSlug }) {
   // slug = aptName slug
   // staff = "Staff" or "Maintenance"
   function getStaff(setState, staff) {
-    fetch(`http://localhost:8080/users/${getSlug()}/${staff}`)
+    fetch(`${HOST}/users/${getSlug()}/${staff}`)
       .then((response) => {
         return response.json();
       })
@@ -40,7 +42,7 @@ export default function Dashboard({ getApartment, getSlug }) {
 
   // GET badges with counts
   function getBadges(setState, type) {
-    fetch(`http://localhost:8080/badges/${getSlug()}/${type}`)
+    fetch(`${HOST}/badges/${getSlug()}/${type}`)
       .then((response) => {
         return response.json();
       })
@@ -82,7 +84,7 @@ export default function Dashboard({ getApartment, getSlug }) {
       </h1>
 
       <div className='float-left'>
-        <QRCode link={`http://localhost:3000/survey/${getSlug()}`} />
+        <QRCode link={`https://residents.me/survey/${getSlug()}`} />
       </div>
 
       <div className='float-right'>

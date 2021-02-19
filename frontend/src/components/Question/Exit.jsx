@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import Banner from './Banner';
 import './question.css';
 
+import HOST from '../../utils/request.js';
+
 export default function Exit({ getSlug, who, apt_template, question_template, rating, feedback, selectedStaffBadges, selectedAptBadges }) {
   // After all data is collected, send data to backend via json
   useEffect(() => {
@@ -30,7 +32,7 @@ export default function Exit({ getSlug, who, apt_template, question_template, ra
               }
     }
     // POST review to backend
-    fetch(`http://localhost:8080/reviews/${getSlug()}/${user_id}`, {
+    fetch(`${HOST}/reviews/${getSlug()}/${user_id}`, {
       method: 'POST',
       headers: {
       'Content-Type': 'application/json'
