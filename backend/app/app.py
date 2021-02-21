@@ -6,19 +6,26 @@ import os
 import json
 import plivo
 from twilio.rest import Client
+import config
 
-#Twilio Client
+# Twilio Client
 # Kyle fix this please
-#client = Client(account_sid, auth_token)
+# client = Client(account_sid, auth_token)
 
 app = Flask(__name__)
-conf = os.environ.get("APP_SETTINGS", "config.StagingConfig")
-app.config.from_object(conf)
+# conf = os.environ.get("APP_SETTINGS", "config.StagingConfig")
+
+# if os.environ.get("FLASK_ENV") == "production":
+# app.config.from_object(config.ProductionConfig)
+# else:
+app.config.from_object(config.StagingConfig)
+
 initialize_db(app)
 CORS(app, supports_credentials=True)
 
 with open("secrets.json") as f:
     secrets = json.load(f)
+
 
 @app.before_first_request
 def before_first_req():
@@ -34,7 +41,7 @@ def sqldict(row):
 
 @app.route("/")
 def hello_world():
-    return "hello world"
+    return "hello world!! :) TYG"
 
 
 @app.route("/init_db", methods=["GET", "POST"])
@@ -254,9 +261,12 @@ def experience():
 
     return jsonify(id=lead.id, name=lead.name, email=lead.email)
 
+
 """
     @DEPRECRATED
 """
+
+
 @app.route("/send_sms/", methods=["GET", "POST"])
 def send_sms():
     # client = plivo.RestClient(auth_id, auth_token)
@@ -296,6 +306,8 @@ def send_sms():
         Notes: apartment_id is a @REQUIRED field
 
 """
+
+
 @app.route("/users", methods=["GET", "POST"], strict_slashes=False)
 def users():
     if request.method == "GET":
@@ -311,50 +323,50 @@ def users():
         return jsonify(users=users)
 
     elif request.method == "POST":
-            # TODO: Check params
-            body = request_data()
+        # TODO: Check params
+        body = request_data()
 
-            # If apartment is given as an string (name of apt)
-            if type(body["apartment"]) == type(body["name"]):
-                data = (
-                    db.session.query(Apartment)
-                    .filter(Apartment.aptName == body["apartment"])
-                    .one()
-                )
+        # If apartment is given as an string (name of apt)
+        if type(body["apartment"]) == type(body["name"]):
+            data = (
+                db.session.query(Apartment)
+                .filter(Apartment.aptName == body["apartment"])
+                .one()
+            )
 
-                user = User(name=body["name"], \
-                            phoneNumber=body["phoneNumber"], \
-                            email=body["email"], \
-                            role=body["role"], \
-                            apartment=data)
-            # If apartment is given as an integer (apt id)
-            else:
-                apartment = Apartment.query.get_or_404(body["apartment"])
+            user = User(
+                name=body["name"],
+                phoneNumber=body["phoneNumber"],
+                email=body["email"],
+                role=body["role"],
+                apartment=data,
+            )
+        # If apartment is given as an integer (apt id)
+        else:
+            apartment = Apartment.query.get_or_404(body["apartment"])
 
-                user = User(name=body["name"], \
-                            phoneNumber=body["phoneNumber"], \
-                            email=body["email"], \
-                            role=body["role"], \
-                            apartment=apartment)
+            user = User(
+                name=body["name"],
+                phoneNumber=body["phoneNumber"],
+                email=body["email"],
+                role=body["role"],
+                apartment=apartment,
+            )
 
-            db.session.add(user)
-            db.session.commit()
+        db.session.add(user)
+        db.session.commit()
 
-            return jsonify(user=sqldict(user)), 201
+        return jsonify(user=sqldict(user)), 201
 
     return jsonify({"response": 405}), 405
 
 
 @app.route("/users/<apt_slug>/<type>", methods=["GET"])
 def getStaff(apt_slug, type):
-    '''Returns all users at apartment_id whose role is <type>.'''
+    """Returns all users at apartment_id whose role is <type>."""
     # aptName will be a slug so need to convert to name first
     aptName = apt_slug.replace("-", " ").title()
-    apt = (
-        db.session.query(Apartment)
-        .filter(Apartment.aptName == aptName)
-        .one()
-    )
+    apt = db.session.query(Apartment).filter(Apartment.aptName == aptName).one()
     # Query User table and filter for apt <type> (staff or maintenance)
     data = (
         db.session.query(User)
@@ -366,7 +378,7 @@ def getStaff(apt_slug, type):
     staff = []
     for datum in data:
         staff.append(sqldict(datum))
-    context = { "users": staff }
+    context = {"users": staff}
 
     return jsonify(**context)
 
@@ -392,7 +404,11 @@ def getStaff(apt_slug, type):
         Notes: Sending an invalid user_id will return a 404 response code.
                 No changes will be made.
 """
-@app.route("/users/<int:user_id>/", methods=["GET", "PUT", "DELETE"], strict_slashes=False)
+
+
+@app.route(
+    "/users/<int:user_id>/", methods=["GET", "PUT", "DELETE"], strict_slashes=False
+)
 def user(user_id):
     if request.method == "GET":
         user = User.query.get_or_404(user_id)
@@ -448,27 +464,30 @@ def user(user_id):
             "websiteType": ...
         }
 """
+
+
 @app.route("/apartments", methods=["GET", "POST"], strict_slashes=False)
 def apartment():
     if request.method == "GET":
         apartments = []
         for apartment in Apartment.query.order_by(Apartment.id).all():
             apartments.append(sqldict(apartment))
-        #TODO: make search parameters?
+        # TODO: make search parameters?
         return jsonify(apartments=apartments)
 
     elif request.method == "POST":
         body = request_data()
 
         # TODO: Check params
-        apartment = Apartment(\
-            aptName=body["aptName"], \
-            aptBadges=json.loads(body["aptBadges"]), \
-            website=body["website"], \
-            units=body["units"], \
-            propertyType=body["propertyType"], \
-            websiteType=body["websiteType"], \
-            reviewLink=body["reviewLink"])
+        apartment = Apartment(
+            aptName=body["aptName"],
+            aptBadges=json.loads(body["aptBadges"]),
+            website=body["website"],
+            units=body["units"],
+            propertyType=body["propertyType"],
+            websiteType=body["websiteType"],
+            reviewLink=body["reviewLink"],
+        )
 
         db.session.add(apartment)
         db.session.commit()
@@ -480,17 +499,13 @@ def apartment():
 
 @app.route("/apartments/<apt_slug>", methods=["GET"])
 def getApartmentByName(apt_slug):
-    '''Returns apartment json via search by name.'''
+    """Returns apartment json via search by name."""
     # apt_slug will be the apt name in all lower case
     # connected by '-'
     aptName = apt_slug.replace("-", " ").title()
 
     # Query by aptName
-    data = (
-        db.session.query(Apartment)
-        .filter(Apartment.aptName == aptName)
-        .one()
-    )
+    data = db.session.query(Apartment).filter(Apartment.aptName == aptName).one()
 
     return jsonify(apartment=sqldict(data)), 201
 
@@ -517,7 +532,13 @@ def getApartmentByName(apt_slug):
         Notes: Will return a 404 response if apartment_id does not exist.
 
 """
-@app.route("/apartments/<int:apartment_id>", methods=["GET", "PUT", "DELETE"], strict_slashes=False)
+
+
+@app.route(
+    "/apartments/<int:apartment_id>",
+    methods=["GET", "PUT", "DELETE"],
+    strict_slashes=False,
+)
 def apartments(apartment_id):
     if request.method == "GET":
         apartment = Apartment.query.get_or_404(apartment_id)
@@ -564,126 +585,128 @@ def apartments(apartment_id):
 """
 This route initializes the session between two users
 """
+
+
 @app.route("/startSMS", methods=["GET"])
 def startSMS():
-    messagesFile = open('messeges.txt' , 'a')
-    session = client.proxy.services(service_sid) \
-                      .sessions \
-                      .create(unique_name='New Session' , ttl = 3500)
+    messagesFile = open("messeges.txt", "a")
+    session = client.proxy.services(service_sid).sessions.create(
+        unique_name="New Session", ttl=3500
+    )
     sessionSid = session.sid
-    #return ("Session has been created between two users")
-    return(sendSMS(sessionSid))
+    # return ("Session has been created between two users")
+    return sendSMS(sessionSid)
 
 
 """
 This route sends the messeges between two users
 """
+
+
 @app.route("/sendSMS", methods=["GET"])
 def sendSMS(sessionSid):
-    participant1 = client.proxy \
-                    .services(service_sid) \
-                    .sessions(sessionSid) \
-                    .participants \
-                    .create(friendly_name='User 1 Name', identifier='User 1 Phone Number')
+    participant1 = (
+        client.proxy.services(service_sid)
+        .sessions(sessionSid)
+        .participants.create(
+            friendly_name="User 1 Name", identifier="User 1 Phone Number"
+        )
+    )
 
-    participant2 = client.proxy \
-                        .services(service_sid) \
-                        .sessions(sessionSid) \
-                        .participants \
-                        .create(friendly_name='User 2 Name', identifier='User 2 Phone Number')
+    participant2 = (
+        client.proxy.services(service_sid)
+        .sessions(sessionSid)
+        .participants.create(
+            friendly_name="User 2 Name", identifier="User 2 Phone Number"
+        )
+    )
 
-    message_interaction = client.proxy \
-        .services(service_sid) \
-        .sessions(sessionSid) \
-        .participants(participant1.sid) \
-        .message_interactions \
-        .create(body='Reply To New User To Chat!')
+    message_interaction = (
+        client.proxy.services(service_sid)
+        .sessions(sessionSid)
+        .participants(participant1.sid)
+        .message_interactions.create(body="Reply To New User To Chat!")
+    )
 
-    message_interaction = client.proxy \
-        .services(service_sid) \
-        .sessions(sessionSid) \
-        .participants(participant2.sid) \
-        .message_interactions \
-        .create(body='Reply To New User To Chat!')
+    message_interaction = (
+        client.proxy.services(service_sid)
+        .sessions(sessionSid)
+        .participants(participant2.sid)
+        .message_interactions.create(body="Reply To New User To Chat!")
+    )
 
     print(sessionSid)
-    #return ("Messeges has been sent")
-    return(viewSMS(sessionSid))
+    # return ("Messeges has been sent")
+    return viewSMS(sessionSid)
 
 
 """
 This route allows users to view the messeges between the users, as well as save them in the
 messeges.txt
 """
+
+
 @app.route("/viewSMS", methods=["GET"])
 def viewSMS(sessionSid):
-    messagesFile = open('messages.txt' , 'a')
+    messagesFile = open("messages.txt", "a")
     messages = []
     messagesFile.write("\n")
-    messagesFile.write('Session has been created between User 3 and User 4')
+    messagesFile.write("Session has been created between User 3 and User 4")
     messagesFile.write("\n")
-    interactions = client.proxy \
-                     .services(service_sid) \
-                     .sessions(sessionSid) \
-                     .interactions \
-                     .list(limit=20)
+    interactions = (
+        client.proxy.services(service_sid)
+        .sessions(sessionSid)
+        .interactions.list(limit=20)
+    )
 
     for record in interactions:
         messagesFile.write(record.data)
         messagesFile.write("\n")
         messages.append(record.data)
-    return (jsonify(messages))
+    return jsonify(messages)
 
 
 @app.route("/reviews/<int:apartment_id>", methods=["GET", "POST"])
 def viewAllReviews(apartment_id):
-    '''View all reviews for an apartment.'''
+    """View all reviews for an apartment."""
     # Make sure user and apartment exist
     apartment = Apartment.query.get_or_404(apartment_id)
 
     # Query table to find all reviews that have this apt id
-    data = (
-        db.session.query(Review)
-        .filter(Review.apartment_id == apartment_id)
-        .all()
-    )
+    data = db.session.query(Review).filter(Review.apartment_id == apartment_id).all()
     # Convert all reviews to json in a list
     reviews = []
     for datum in data:
         reviews.append(sqldict(datum))
-    context = { "reviews": reviews }
+    context = {"reviews": reviews}
 
     return jsonify(**context)
 
 
 @app.route("/reviews/<apt_slug>/<int:user_id>", methods=["GET", "POST"])
 def viewReview(apt_slug, user_id):
-    '''
+    """
         Create new resident review of an apartment or
         view all reviews for an employee of an apartment.
-    '''
+    """
     # Make sure user and apartment exist
     # apartment = Apartment.query.get_or_404(apartment_id)
     user = User.query.get_or_404(user_id)
     # aptName will be a slug so need to convert to name first
     aptName = apt_slug.replace("-", " ").title()
-    apt = (
-        db.session.query(Apartment)
-        .filter(Apartment.aptName == aptName)
-        .one()
-    )
+    apt = db.session.query(Apartment).filter(Apartment.aptName == aptName).one()
 
-    if request.method == "POST": # TODO: maybe try catch block? for 404 error
+    if request.method == "POST":  # TODO: maybe try catch block? for 404 error
         # Get JSON from request
         body = request_data()
 
         # Create new review
-        new_review = Review(\
-            rating=body.get("rating"), \
-            review=body.get("review"), \
-            aptBadges=body.get("badges"), \
-            apartment=apt, \
-            user_id=user_id
+        new_review = Review(
+            rating=body.get("rating"),
+            review=body.get("review"),
+            aptBadges=body.get("badges"),
+            apartment=apt,
+            user_id=user_id,
         )
 
         # Put new review into database
@@ -702,28 +725,20 @@ def viewReview(apt_slug, user_id):
     reviews = []
     for datum in data:
         reviews.append(sqldict(datum))
-    context = { "reviews": reviews }
+    context = {"reviews": reviews}
 
     return jsonify(**context)
 
 
 @app.route("/badges/<apt_slug>/<type>", methods=["GET"])
 def getBadgeCount(apt_slug, type):
-    '''Returns dictionary with <type> of badges mapped to their amount.'''
+    """Returns dictionary with <type> of badges mapped to their amount."""
     # aptName will be a slug so need to convert to name first
     aptName = apt_slug.replace("-", " ").title()
-    apt = (
-        db.session.query(Apartment)
-        .filter(Apartment.aptName == aptName)
-        .one()
-    )
+    apt = db.session.query(Apartment).filter(Apartment.aptName == aptName).one()
 
     # Get all reviews for this apartment
-    data = (
-        db.session.query(Review)
-        .filter(Review.apartment == apt)
-        .all()
-    )
+    data = db.session.query(Review).filter(Review.apartment == apt).all()
 
     # Map to keep track of counts
     badges = {}
@@ -743,6 +758,7 @@ def getBadgeCount(apt_slug, type):
                 badges[badge] += 1
 
     return jsonify(badges=badges)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
